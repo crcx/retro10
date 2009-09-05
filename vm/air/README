@@ -1,9 +1,0 @@
-Retro for Adobe AIR
--------------------
-
-1) Get AIR SDK
-2) Modify SDK variable in Makefile to point to root of SDK
-3) make key
-4) make
-   When asked for password, enter 'password' (without quotes)
-

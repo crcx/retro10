@@ -1,8 +1,0 @@
-( A simple switch/case construct.                             )
-( - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - )
-
-create <case> 0 ,
-: switch <case> ! ;
-
-compiler: case:  ` dup <case> literal, ` @ ` =if ` drop ;
-compiler: break  ` ;; ` then ;

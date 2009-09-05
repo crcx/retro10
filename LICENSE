@@ -1,23 +1,8 @@
-The core Retro language, Ngaro VM, documentation, and build tools
-(see the "image", "tools", "toka", "doc", "vm/console", "vm/air",
-"vm/javascript", and "bin/library/standard" directories) were
-written by Charles Childers. The following copyright applies to
-these files:
+----------------------------------------------------------------------
+The Retro language was written by Charles Childers.
+The following copyright applies:
 
   Copyright (c) 2008, 2009, Charles Childers
-
-For the C# and Java ports ("vm/dotnet", "vm/java") the following
-copyright applies:
-
-  Copyright (c) 2009, Simon Waite and Charles Childers
-
-For the MIDP port ("vm/midp"). the following copyright applies:
-
-  Copyright (c) 2009, Martin Polak
-
-----------------------------------------------------------------------
-Unless otherwise noted, the following license applies to all code
-distributed with Retro:
 
 Permission to use, copy, modify, and/or distribute this software for
 any purpose with or without fee is hereby granted, provided that the

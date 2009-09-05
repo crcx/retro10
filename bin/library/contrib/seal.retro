@@ -1,6 +1,0 @@
-( Allows sealing the dictionary after a specific word. Only   )
-( the specified word and words defined after it will remain   )
-( visible.                                                    )
-( - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - )
-
-: seal ( "- ) ' drop 0 which @ ! ;

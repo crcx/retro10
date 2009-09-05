@@ -1,6 +1,0 @@
-MIDlet-1: Retroforth, /icon.png, Retro.Retroforth
-MIDlet-Name: Retro
-MIDlet-Vendor: retroforth.org
-MIDlet-Version: 1.0
-MicroEdition-Configuration: CLDC-1.0
-MicroEdition-Profile: MIDP-1.0

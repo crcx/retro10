@@ -1,7 +1,7 @@
 The Retro Language
 ==================
 :Author: Charles Childers
-:Version: 10.2 (work in progress)
+:Version: 10.3 (20090910)
 
 
 ===========================
@@ -24,50 +24,6 @@ browser.
 The code and documentation for Retro are provided under
 an open source license.
 
-Platforms Supported
--------------------
-- Alpha
-
-  - Linux
-
-- ARM
-
-  - iPhoneOS (iPhone, iPod Touch, 2.2.1; jailbroke)
-
-- PowerPC
-
-  - AIX
-
-- x86
-
-  - BeOS
-  - BSD (DragonFly, FreeBSD, NetBSD, OpenBSD)
-  - Haiku
-  - Linux
-  - MacOS X (10.5.x)
-  - Windows (XP, Vista)
-
-- x86-64
-
-  - Linux
-
-- Browsers
-
-  - Chrome
-  - FireFox (2 & 3)
-  - Opera
-  - Safari
-  - Safari Mobile (using form-based I/O)
-  - SongBird
-
-- Java
-
-  - Console
-  - MIDP
-
-- .NET (console)
-
-- Adobe AIR
 
 ==========================
 Section 2: Getting Started
@@ -75,142 +31,43 @@ Section 2: Getting Started
 
 Obtaining
 ---------
-Retro can be obtained as either source code or as a precompiled
-binary.
+Retro can be downloaded from http://retroforth.org
 
-For those who just want to get started quickly, the binaries are
-recommended. They are already built and confirmed to work. The
-most recent binaries can be obtained from http://retroforth.org/binaries
+Both binaries and source snapshots are provided. We recommend
+that you use the provided binary distribution unless you need
+to build from source.
 
-Those wanting a bit more control, or who use a platform binaries
-are not offered for will need to build from source. The latest
-source snapshots (both development and stable) can be found at
-http://retroforth.org
+You will need to get a copy of the Ngaro VM for your operating
+system and processor. You will also need to get a copy of the
+current Retro image file (retroImage). The VM should be kept in
+your path, and the retroImage should be in the current working
+directory.
 
 Developers who want to keep up with the latest changes are encouraged
 to use Git. We have a repository at http://github.com/crcx/retro10 which
 is kept up to date.
 
-Building (Unix-like host)
--------------------------
-These instructions are for users of Linux, BSD, OS X, BeOS, AIX, etc.
-Windows users should see the next section.
 
-You'll need a few things:
+Building from Source (Unix-like host)
+-------------------------------------
+If you do choose to build the image from scratch, you will need a
+Unix-like operating system (BSD, Linux, OS X) and the following
+tools:
 
 - GCC (4.x recommended)
 - Binutils
 - Make
-- Curses (curses, ncurses, and pdcurses all work fine) and/or libSDL
+- Ngaro VM
 
-Given these, try the following command:
-
-::
-
-   make vm
-
-If you get any errors, check the **vm/console/retro.c** and make
-sure the **LIBS** line matches the curses varient on your system.
-
-If you are using NetBSD, you can either change the **LIBS** to
-**-lcurses** or use the following command to build against ncurses:
+Given these, edit the Makefile and modify the first line to
+point to your Ngaro VM, then run make.
 
 ::
 
-  make LIBRARY_PATH="/usr/pkg/lib" vm
+   make
 
-Building (Windows)
-------------------
-- Install Dev C++ (http://prdownloads.sourceforge.net/dev-cpp/devcpp-4.9.9.2 setup.exe)
-- Install the Curses Devpack (http://devpaks.org/details.php?devpak=5)
-- Create an empty project and add the following files from **vm/console** to it:
+You should end up with a new **retroImage**.
 
-  - functions.h
-  - disassemble.c
-  - endian.c
-  - loader.c
-  - ngaro.c
-  - devices.c
-  - initial_image.c
-  - vm.c
-  - vm.h
-
-- Go to Project -> Options and add the following to the Linker commands: **-lcurses**
-- Compile everything
-
-Building (Java)
----------------
-There are two Java implementations. The first, a console based implementation, should
-work on all common Unix-like OSes. (Due to poor console API support in Java, it does
-not work on Windows) To build this port, ensure that you have the JDK installed and
-do:
-
-::
-
-  make java
-
-The second implementation is for MIDP compatible devices. You'll need Ant, the MPP SDK,
-and the JDK to build it.
-
-::
-
-  cd vm/midp
-  ant
-
-Before building the MIDP version, you should adjust the paths in **build.xml** to match
-your systems configuration.
-
-Building (.NET)
----------------
-The build process is only tested under Unix-like OSes running Mono. You will likely
-need to make some changes in the Makefiles to use Microsoft's C# compiler.
-
-::
-
-  make dotnet
-
-
-Starting Retro
---------------
-How to start depends on which platform you build for. Enter the **bin** directory
-and try one of the following:
-
-::
-
-  # Console
-  ./retro
-
-  # .NET
-  mono retro.exe
-
-  # Java
-  java retro
-
-If you are using the *console* targets, you can use some command line arguments:
-
-::
-
-  --with filename
-
-Use *filename* as an input source. You can include multiple files by specifying
-more than one --with, but you should be aware that the files are included in
-reverse order. E.g.,
-
-::
-
-  ./retro --with file-a --with file-b --with file-c
-
-With this, *file-c* is included, then *file-b*, and finally *file-a*.
-
-The *console*, *java*, and *mono* targets also support one other argument:
-
-::
-
-  --endian
-
-This will convert the image to the host endian format. It may be necessary if
-you are using an image provided by someone else, or when moving from a *java*
-target to one of the others.
 
 Interacting with Retro
 ----------------------
@@ -1125,61 +982,6 @@ List of Words by Class
 | Flag indicting whether cr, lf, and tab should be remapped|
 | to space.                                                |
 +--------------+--------------+------------+---------------+
-
-
-==========================
-Section 5: Tips and Tricks
-==========================
-
-MacOS X
--------
-The standard keymaps in the Terminal app don't report the
-normal ASCII codes for certain keys. This can be worked around
-with **osx.retro**. After building, extend your retroImage:
-
-::
-
-  ./retro --with library/os-specific/osx.retro
-
-Save your image, and you'll be able to use backspace in
-the future.
-
-
-==========================
-Section 6: Core Extensions
-==========================
-
-Overview
---------
-While working with Retro, I've assembled a set of extensions that
-I personally find useful, but which don't need to be in the core.
-
-Tip:
-  Download a precompiled image from http://retroforth.org/binaries
-  to get all of these preloaded.
-
-
-Loading the Extensions
-----------------------
-The extensions are provided in a single file named **extend.retro**.
-This can be found in the **bin** directory. Load it by doing:
-
-::
-
-  ./retro --with library/standard/extend.retro
-
-Save, and the extensions will remain present in future sessions.
-
-
-The Words
----------
-The main words provided by **extend.retro** are covered in the list
-below. Some of the internal factors are not listed.
-
-
-+--------------+--------------+------------+---------------+
-| Name         | Class        | Data Stack | Address Stack |
-+==============+==============+============+===============+
 | {            | .word        |            |               |
 +--------------+--------------+------------+---------------+
 | Start a local namespace                                  |
@@ -1286,9 +1088,8 @@ below. Some of the internal factors are not listed.
 +--------------+--------------+------------+---------------+
 
 
-
 =======================
-Section 7: Block Editor
+Section 5: Block Editor
 =======================
 
 Introduction
@@ -1301,13 +1102,6 @@ series of earlier editors, and has a few nice features:
   new image
 - All editing words are vectors allowing more control over
   the editor
-
-To load it:
-
-::
-
-  ./retro --with library/standard/editor.retro --with library/standard/extend.retro
-
 
 Tip:
   Line and column numbers start at 0
@@ -1342,7 +1136,7 @@ The Words
 
 
 =====================
-Section 8: Retrospect
+Section 6: Retrospect
 =====================
 
 Introduction
@@ -1350,16 +1144,6 @@ Introduction
 Retrospect is a debugging aid. It provides a decompiler,
 memory dumper, and other tools that may prove useful in
 better understanding your code and the compiler.
-
-To load it:
-
-::
-
-  ./retro --with library/standard/retrospect.retro --with library/standard/extend.retro
-
-Retrospect requires the extend.retro package to be loaded
-before it will work.
-
 
 The Words
 ---------

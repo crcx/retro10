@@ -1,5 +1,5 @@
-.PHONY: image toka tools
 VM = ~/retro
+.PHONY: image toka tools
 
 default:
 	cd tools && gcc build.c -o build

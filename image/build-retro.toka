@@ -125,13 +125,13 @@ value| heap origin imageFile mapFile lastop |
 #! is also some code to mark the dictionary pointer
 #! and patch it at the end of the initial dictionary.
 #! ------------------------------------------------------------
-value| 'WORD 'MACRO 'DATA 'INLINE 'COMPILER link #entries |
+value| 'WORD 'MACRO 'DATA 'PRIMITIVE 'COMPILER link #entries |
 [ #entries 1 + to #entries ] is e+1
 [ e+1 here link , to link , , wsparse $, ] is entry
 [ 'WORD entry ] is word:
 [ 'MACRO entry ] is macro:
 [ 'DATA entry ] is data:
-[ 'INLINE entry ] is inline:
+[ 'PRIMITIVE entry ] is primitive:
 [ 'COMPILER entry ] is compiler:
 [ link r> ! ] is patch-dictionary
 [ here cells origin + >r ] is mark-dictionary

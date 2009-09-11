@@ -91,7 +91,7 @@ label: okmsg     " ok " $,
 
 : .word   ( a- )
   compiler # @, -1 # =if 7 # t-, t-, ; then execute ;
-: .inline ( a- )
+: .primitive ( a- )
   dup, @, 0 # !if .word ; then
   compiler # @, -1 # =if 1+, 1+, @, t-, ; then execute ;
 : .macro  ( a- )
@@ -102,7 +102,7 @@ label: okmsg     " ok " $,
    compiler # @, 0 # =if drop ; then execute ;
 
 ' .word     to 'WORD      ' .macro  to 'MACRO
-' .data     to 'DATA      ' .inline to 'INLINE
+' .data     to 'DATA      ' .primitive to 'PRIMITIVE
 ' .compiler to 'COMPILER
 #! ------------------------------------------------------------
 variable fb     ( canvas present?    )
@@ -340,17 +340,17 @@ variable #mem   ( Amount of memory provided )
 main:
   run-on-boot listen
 #! ----------------------------------------------------------
-( Inline )
-' 1+           inline: 1+          ' 1-           inline: 1-
-' swap         inline: swap        ' drop         inline: drop
-' and          inline: and         ' or           inline: or
-' xor          inline: xor         ' @            inline: @
-' !            inline: !           ' +            inline: +
-' -            inline: -           ' *            inline: *
-' /mod         inline: /mod        ' <<           inline: <<
-' >>           inline: >>          ' nip          inline: nip
-' dup          inline: dup         ' in           inline: in
-' out          inline: out
+( Primitives )
+' 1+           primitive: 1+       ' 1-           primitive: 1-
+' swap         primitive: swap     ' drop         primitive: drop
+' and          primitive: and      ' or           primitive: or
+' xor          primitive: xor      ' @            primitive: @
+' !            primitive: !        ' +            primitive: +
+' -            primitive: -        ' *            primitive: *
+' /mod         primitive: /mod     ' <<           primitive: <<
+' >>           primitive: >>       ' nip          primitive: nip
+' dup          primitive: dup      ' in           primitive: in
+' out          primitive: out
 
 ( Words )
 ' t-here       word: here          ' t-,          word: ,
@@ -379,7 +379,7 @@ main:
 ' bye          word: bye           ' (remap-keys) word: (remap-keys)
 ' with-class   word: with-class    ' .word        word: .word
 ' .macro       word: .macro        ' .data        word: .data
-' .inline      word: .inline       ' .compiler    word: .compiler
+' .primitive   word: .primitive    ' .compiler    word: .compiler
 ' d->class     word: d->class      ' d->xt        word: d->xt
 ' d->name      word: d->name       ' boot         word: boot
 ' depth        word: depth         ' reset        word: reset

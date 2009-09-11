@@ -1,74 +1,16 @@
-.PHONY: vm image toka tools
-
+.PHONY: image toka tools
+VM = ~/retro
 
 default:
-	@clear
-	@echo Try one of the following:
-	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	@echo make vm
-	@echo - Compile the VM \(console version\)
-	@echo
-	@echo make dotnet
-	@echo - Build the VM \(For .NET, requires Mono\)
-	@echo
-	@echo make java
-	@echo - Build the VM \(for Java, requires JDK\)
-	@echo
-	@echo make image
-	@echo - Rebuild the initial retroImage. Only needed if you customize
-	@echo \ \ the original image.
-	@echo
-	@echo make clean
-	@echo - Remove temporary files, binaries
-	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-tools:
-	@cd tools && make
-toka: tools
-	@cd toka && make
-image: tools toka
-	@cd image && make
-	@mv image/retroImage* bin
+	cd tools && gcc build.c -o build
+	cd tools && ./build fix-image
+	cd toka && ../tools/build toka
+	cd image && ../toka/toka build-retro.toka
+	cd image && ../tools/fix-image retroImage
+	cd image && $(VM) --with stage2.retro
+	mv image/retroImage* .
+
 clean:
-	@rm -f bin/retro
-	@rm -f bin/retro-fast
-	@rm -f bin/retro-nocurses
-	@rm -f bin/retro-fb
-	@rm -f bin/retroImage.map
-	@rm -f bin/retroImage
-	@rm -f bin/retro.class
-	@rm -f bin/retro.exe
-	@rm -f toka/toka
-	@rm -f latest.tar.gz
-	@rm -f tools/fix-image
-	@rm -rf tools/build
-	@rm -f vm/midp/bin/Retro.jar
-	@cd vm/console && make clean
-	@cd vm/java && make clean
-	@cd vm/dotnet && make clean
-	@cd toka && make clean
-	@cd doc && make clean
-vm: tools
-	@cd vm/console && make
-	@mv vm/console/retro bin
-	@mv vm/console/retro-nocurses bin
-dotnet:
-	@cd vm/dotnet && make
-	@mv vm/dotnet/retro.exe bin
-java:
-	@cd vm/java && make
-	@mv vm/java/retro.class bin
-dist:
-	@git archive master | gzip -9 >latest.tar.gz
-	@mkdir retro-10.latest
-	@cd retro-10.latest && tar xvf ../latest.tar.gz
-	@rm -r latest.tar.gz
-	@tar cf latest.tar retro-10.latest
-	@gzip -9 latest.tar
-	@rm -rf retro-10.latest
-bootstrap:
-	./toka/toka tools/image2any vm bin/retroImage >vm/console/initial_image.c
-	./toka/toka tools/image2any java bin/retroImage >vm/java/middle.java
-	./toka/toka tools/image2any dotnet bin/retroImage >vm/dotnet/middle.cs
-	./toka/toka tools/image2any javascript bin/retroImage >vm/javascript/retroImage.js
-	./toka/toka tools/image2any javascript bin/retroImage >vm/air/source/retroImage.js
-	./toka/toka tools/image2any midp bin/retroImage >vm/midp/src/Retro/Img.java
+	rm -f retroImage retroImage.map
+	rm -f toka/*.o tools/*.o
+	rm -f tools/build tools/fix-image toka/toka

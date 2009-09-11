@@ -8,14 +8,9 @@ There are two parts to Retro, an executable which provides the
 virtual machine, and an image file which contains the actual
 Retro language.
 
-The virtual machine includes a minimal image. If it can't
-find a retroImage and no other image is specified on the
-command line, it will start the minimal image.
-
-An extended image can be built. Look in the bin/library
-directory for additional modules and a shell script to help
-make building custom images a bit easier. You will need the
-C console implementation to use it.
+This is the source code for the image file. You will need the
+VM to fully build this. Modify the VM line in the Makefile to
+point to your VM.
 
 The latest docmentation can be found in the 'doc' directory.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

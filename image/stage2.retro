@@ -1,0 +1,329 @@
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( This contains the second stage of the Retro language. It's  )
+( a collection of useful words and tools that make things     )
+( nicer overall.                                              )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( These words provide a limited degree of control over the    )
+( visibility of words.                                        )
+(                                                             )
+( In older versions of Retro, these were called loc: and ;loc )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( ... global scope ....                                       )
+(                                                             )
+( { ... start local scope, level 1                            )
+(                                                             )
+(   { ... start local scope, level 2                          )
+(   } ... words in scope level 2 are no longer                )
+(     ... visible                                             )
+(                                                             )
+( } ... words in scope level 1 are no longer                  )
+(   ... visible                                               )
+(                                                             )
+( ... back to global scope ...                                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+create <list>  ( -a )
+       0 , 0 , 0 , 0 , 0 ,
+: { ( - ) last @ <list> @ 1+ <list> + ! 1 <list> +! ;
+: } ( - ) 1 <list> -! <list> @ 1+ <list> + @ last ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( A somewhat more powerful scoping system                     )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( ... global scope ...                                        )
+( {{                                                          )
+(    ... local scope ...                                      )
+( ---reveal---                                                )
+(    ... global scope, with local scope still visible ...     )
+( }}                                                          )
+( ... global scope, local words not visible ...               )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: find-last-visible last repeat @ dup @ <list> 1+ @ =if ;; then again ;
+: {{ ( - )  last @ <list> ! ;
+: ---reveal---  ( - ) last @ <list> 1+ ! ;
+: }} ( - )  <list> @ find-last-visible ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( A simple word to allocate memory in a linear fashion. It's  )
+( useful for arrays and similar things.                       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: allot  ( n- )  heap +! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( These allow a more readable way to create variables and     )
+( constants. It also makes constants more efficient.          )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: variable:  ( n"- )  create , ;
+: variable   ( "-  )  0 variable: ;
+: constant   ( n"- )  create last @ d->xt ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Shortcuts for incrementing and decrementing variables       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: ++  ( a- )  1 swap +! ;
+: --  ( a- )  1 swap -! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Copy memory from one location to another.                   )
+( Takes source, dest, and a count.                            )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  variable src
+  variable dst
+  : (copy) for src @ @ dst @ ! src ++ dst ++ next ;
+  ---reveal---
+  : copy ( aan- ) push dst ! src ! pop (copy) ;
+}}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Fill a memory range with a specific value.                  )
+( Takes an address, a value, and a count.                     )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  variable dst
+  variable val
+  : (fill) for val @ dst @ ! dst ++ next ;
+---reveal---
+  : fill ( ann- ) push val ! dst ! pop (fill) ;
+}}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Some shortcuts that save some typing and keep the code a    )
+( bit cleaner in macros.                                      )
+(   ` wordname  =  ['] wordname compile                      )
+(   ` wordname  =  ['] wordname execute                      )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+compiler: `  ( "- )  ' literal, which @ d->class @ compile ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( This is a rather common word that can be used to easily     )
+( display a string.                                           )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+macro: ." ( "- )
+   compiler @ 0 =if " type ;; then ` s" ` type ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Retro has some simple conditional forms, which tie the      )
+( comparisons to the flow control. It's often useful to have  )
+( separate functions for the comparisons, so I define them    )
+( here.                                                       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+-1 constant TRUE   ( -f )
+ 0 constant FALSE  ( -f )
+
+compiler: if    ( f- )
+       compiler @ 0; drop TRUE literal, ` =if ;
+
+compiler: ;then ( - )
+       compiler @ 0; drop ` ;; ` then ;
+
+: =  ( xy-f )  =if TRUE ;then FALSE ;
+: <> ( xy-f )  !if TRUE ;then FALSE ;
+: >  ( xy-f )  >if TRUE ;then FALSE ;
+: <  ( xy-f )  <if TRUE ;then FALSE ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Allows Retro to "forget" a word, and anything defined after )
+( it.                                                         )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: forget ( "- ) ' drop which @ dup heap ! @ last ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Allow changing the class of a word                          )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: reclass ( a"- ) ' drop which @ d->class ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Numeric Bases                                               )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: decimal ( - ) 10 base ! ;
+: hex     ( - ) 16 base ! ;
+: octal   ( - )  8 base ! ;
+: binary  ( - )  2 base ! ;
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( This implements quotes and a few words to work with them.   )
+( Quotes are anonymous, nestable blocks of code.              )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+
+macro: [[ compiler @ 8 , here 0 , here compiler on ;
+macro: ]] 9 , swap here swap ! swap compiler ! .data ;
+
+: ifTrue swap TRUE =if execute ;then drop ;
+: ifFalse swap FALSE =if execute ;then drop ;
+
+: I pop pop pop pop dup push swap push swap push swap push ;
+: iterate swap dup for push dup push execute pop pop 1- next 2drop ;
+: +iterate swap 1 swap for push dup push execute pop pop 1+ next 2drop ;
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( This is a block editor that I've been using for many years. )
+( It's simple, and doesn't have a lot of features, but it is  )
+( more than enough for most of my prototyping work.           )
+(                                                             )
+( Actually, it's proven more popular than I ever expected. It )
+( has been used by many of Retro's users, and implementations )
+( now exist for several other Forth systems.                  )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Line and column numbers start at 0.                         )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Quick Reference:                                            )
+(      # s        Select a new block                          )
+(        p        Previous block                              )
+(        n        Next block                                  )
+(      # i ..     Insert .. into line                         )
+(   # #2 ia ..    Insert .. into line [#2] starting at        )
+(                 column [#]                                  )
+(        x        Erase the current block                     )
+(      # d        Erase the specified line                    )
+(        v        Display the current block                   )
+(        e        Evaluate Block                              )
+(        new      Erase all blocks                            )
+( # red.set#      Set the # of blocks. Calls 'new'            )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( The memory layout and basic configuration.                  )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+variable #-blocks
+512 constant #-block-size
+variable offset
+
+10 variable: line-ending
+
+variable blk
+: block     512 * offset @ + ;
+: (block)   blk @ block ;
+: (line)    64 * (block) + ;
+
+: (v) ;
+: (e) ;
+: v   ( -  ) (v) ;
+: s   ( n- ) blk ! v ;
+: d   ( n- ) (line) 32 64 fill v ;
+: x   ( -  ) (block) 32 512 fill v ;
+: p   ( -  ) -1 blk +! v ;
+: n   ( -  ) 1 blk +! v ;
+: ia  ( nn"- )
+  whitespace @ push whitespace off
+  (line) + push line-ending @ accept tib pop
+  tib getLength copy v
+  pop whitespace ! ;
+: i   ( n"- ) 0 swap ia v ;
+: new ( -  ) offset @ 32 #-block-size #-blocks @ * fill ;
+: e   ( -  ) (e) ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Default Block Viewer                                        )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{
+  : (type)  for dup @ emit 1+ next ;
+  : type    (type) drop ;
+  : space   32 emit ;
+
+  : row     . dup 64 type 64 + cr ;
+  : .rows   0 row 1 row 2 row 3 row
+            4 row 5 row 6 row 7 row ;
+  : .block  ." Block: " blk @ . ." of " #-blocks @ . ;
+  : x       ." +---:---+---:---" ;
+  : bar     space space x x x x cr ;
+  : vb      bar blk @ block .rows drop bar ;
+  : status  .block ;
+  here is (v) ] clear vb status ;
+}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Default Block Evaluator                                     )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{
+  variable count
+  variable buffer
+  : setup  ( -- )    512 count ! (block) buffer ! ;
+  : -remap ( -- )    ['] key :devector ;
+  : get    ( -- c )  buffer @ @ ;
+  : next   ( -- c )
+    count @ 0 =if 32 -remap ;then
+    count -- get buffer ++ ;
+  : remap  ( -- )    ['] next ['] key :is ;
+  here is (e) ] setup remap ;
+}
+
+: red.set#
+  #-blocks ! #mem @ #-block-size #-blocks @ * - offset ! new ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( All done! Fill the blocks with spaces, and we're good to go )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+64 red.set#
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Retrospect by Charles Childers                              )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( This contains a set of words I find useful while debugging  )
+( code.                                                       )
+(                                                             )
+( Stack comments are provided for words which are intended    )
+( to be used directly. Internal factors do not have the stack )
+( comments provided.                                          )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+
+{{
+  variable *addr
+
+  : nextOp 1 *addr +! ;
+  : @addr *addr @ @ ;
+  : .contents @addr . ;
+  : .addr *addr @ . ;
+
+  : .ascii dup 32 >if dup 128 <if 39 emit emit 39 emit 0 then then drop ;
+
+  : render type cr drop ;
+  : s: 32 accept tib keepString literal, ['] render compile ` ;; ;
+  compiler: a: ` over ` =if s: ` then ;
+
+  : .name d->name type cr ;
+  : resolve -1 last @ repeat dup d->xt @ @addr =if .name drop 0 ;then 0; @ again ;
+  : render type 32 emit drop nextOp resolve 0; drop .contents cr ;
+  : x: 32 accept tib keepString literal, ['] render compile ` ;; ;
+  compiler: b: ` over ` =if x: ` then ;
+
+  : decompile
+    32 emit
+    @addr
+     0 a: nop      1 b: lit       2 a: dup       3 a: drop
+     4 a: swap     5 a: push      6 a: pop       7 b: call
+     8 b: jump     9 a: ;        10 b: >jump    11 b: <jump
+    12 b: !jump   13 b: =jump    14 a: @        15 a: !
+    16 a: +       17 a: -        18 a: *        19 a: /mod
+    20 a: and     21 a: or       22 a: xor      23 a: <<
+    24 a: >>      25 a: 0;       26 a: 1+       27 a: 1-
+    28 a: in      29 a: out      30 a: wait
+    s" unknown: " type dup . .ascii cr ;
+
+  : header? @addr 9 =if *addr @ 1+ @ 30 >if .addr decompile pop pop 2drop then then ;
+  : vector? @addr 0 =if *addr @ 1+ @ 0 =if pop pop 2drop then then ;
+  : more? header? vector? ;
+  : getWord ' drop which @ d->xt @ *addr ! ;
+
+---reveal---
+  : dump ( an- )  cr for @+ over 1- . . cr next drop ;
+  : show ( an- ) swap *addr ! cr for .addr decompile nextOp next ;
+  : see  ( "- ) getWord cr repeat .addr decompile nextOp more? again ;
+}}
+
+save
+bye

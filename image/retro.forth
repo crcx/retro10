@@ -2,8 +2,8 @@
 #! Retro, a dialect of Forth
 #! ------------------------------------------------------------
    3072 is-data SCRATCH-START
-   4096 is-data TIB
-   5120 is-data HEAP-START
+   3584 is-data TIB
+   4096 is-data HEAP-START
 
 begin retroImage
 #! ------------------------------------------------------------

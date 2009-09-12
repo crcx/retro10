@@ -105,9 +105,6 @@ label: okmsg     " ok " $,
 ' .data     to 'DATA      ' .primitive to 'PRIMITIVE
 ' .compiler to 'COMPILER
 #! ------------------------------------------------------------
-variable fb     ( canvas present?    )
-variable fw     ( framebuffer width  )
-variable fh     ( framebuffer height )
 -1 variable: update
 : redraw  ( - )  update # @, 0; drop, 0 # 3 # out, ;
 
@@ -310,6 +307,9 @@ variable found
   depth : (reset) 0; push, drop, pop, 1-, (reset) ;
 #! ------------------------------------------------------------
 variable #mem   ( Amount of memory provided )
+variable fb     ( canvas present?    )
+variable fw     ( framebuffer width  )
+variable fh     ( framebuffer height )
 
 : boot ( - )
   copytag # type cr ;

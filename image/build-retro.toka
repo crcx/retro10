@@ -13,9 +13,7 @@ value| heap origin imageFile mapFile lastop |
 #! Bits related to building the image map
 #! ------------------------------------------------------------
 [ ( $- )
-  ( SPACE string.appendChar )
-  >r mapFile r> string.getLength file.write drop
-] is $log
+  mapFile swap string.getLength file.write drop ] is $log
 [ ( - )
   mapFile " \n" string.getLength file.write drop ] is \n
 

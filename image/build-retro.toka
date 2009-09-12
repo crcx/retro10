@@ -13,7 +13,7 @@ value| heap origin imageFile mapFile lastop |
 #! Bits related to building the image map
 #! ------------------------------------------------------------
 [ ( $- )
-  SPACE string.appendChar
+  ( SPACE string.appendChar )
   >r mapFile r> string.getLength file.write drop
 ] is $log
 [ ( - )
@@ -55,7 +55,7 @@ value| heap origin imageFile mapFile lastop |
 [ ( "- )
   here is-data
   last @ :xt >string TAB string.appendChar $log
-  " LABEL:" $log last @ :name $log \n
+  " LABEL: " $log last @ :name $log \n
 ] is label:
 
 [ ( n- )
@@ -109,7 +109,7 @@ value| heap origin imageFile mapFile lastop |
       getxt off
     ] +action
     last @ :xt cell+ @ @ >string TAB string.appendChar $log
-    " WORD:" $log last @ :name $log \n
+    " WORD: " $log last @ :name $log \n
   ]
 } is :
   is '

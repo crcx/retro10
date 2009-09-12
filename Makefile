@@ -7,7 +7,7 @@ default:
 	cd toka && ../tools/build toka
 	cd image && ../toka/toka build-retro.toka
 	cd image && ../tools/fix-image retroImage
-	cd image && $(VM) --with stage2.retro
+	cd image && $(VM) --with stage2.retro >/dev/null
 	mv image/retroImage* .
 
 clean:

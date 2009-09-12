@@ -1,14 +1,14 @@
 VM = ~/retro
-.PHONY: image toka tools
+.PHONY: toka tools
 
 default:
 	@cd tools && gcc build.c -o build
 	@cd tools && ./build fix-image
 	@cd toka && ../tools/build toka
-	@cd image && ../toka/toka build-retro.toka
-	@cd image && ../tools/fix-image retroImage
-	@cd image && $(VM) --with stage2.retro >/dev/null
-	@mv image/retroImage* .
+	@cd source && ../toka/toka build-retro.toka
+	@cd source && ../tools/fix-image retroImage
+	@cd source && $(VM) --with stage2.retro >/dev/null
+	@mv source/retroImage* .
 
 clean:
 	@rm -f retroImage retroImage.map

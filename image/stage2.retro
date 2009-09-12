@@ -156,6 +156,25 @@ compiler: ;then ( - )
 : binary  ( - )  2 base ! ;
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Search for a word by name                                   )
+( It takes a string containing the name of the word to look   )
+( for and returns an address and a flag. If true, the address )
+( is the *dictionary header* of the word being looked for. If )
+( false, just discard the address.                            )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  variable name
+  variable found
+  : prepare ( a-a )  found off name ! last @ ;
+  : done    ( -af )  which @ found @ ;
+  : match?  ( $-$f ) dup d->name name @ compare ;
+  : search  ( $- )   repeat match? if which ! found on ;then @ 0; again ;
+---reveal---
+  : find ( "-af ) prepare search done ;
+}}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This implements quotes and a few words to work with them.   )
 ( Quotes are anonymous, nestable blocks of code.              )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

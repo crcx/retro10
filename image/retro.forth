@@ -106,11 +106,11 @@ label: okmsg     " ok " $,
 ' .compiler to 'COMPILER
 #! ------------------------------------------------------------
 -1 variable: update
-: redraw  ( - )  update # @, 0; drop, 0 # 3 # out, ;
+: redraw  ( - ) update # @, 0; drop, 0 # 3 # out, ;
 
-: emit ( c- )  1 # 2 # out, wait redraw ;
-: cr   ( -  )  10 # emit ;
-: clear    ( -   )  -1 # emit ;
+: emit   ( c- )  1 # 2 # out, wait redraw ;
+: cr     ( -  ) 10 # emit ;
+: clear  ( -  ) -1 # emit ;
 
 : (type) ( a-a ) repeat @+ 0; emit again ;
 : type   ( a-  ) update # off (type) drop, update # on redraw ;
@@ -120,8 +120,8 @@ variable break-char      ( Holds the delimiter for 'accept' )
 -1 variable: whitespace  ( Allow extended whitespace )
 
 : (remap-keys) ( c-c ) ;
-: crlf ( c-c ) dup, 13 # =if drop, 10 # then ;
 : ws ( c-c )
+  dup, 13 # =if drop, 10 # then
   whitespace # @, 0; drop,
   dup,  9 # =if drop, 32 # ; then
   dup, 10 # =if drop, 32 # ; then
@@ -131,17 +131,16 @@ variable break-char      ( Holds the delimiter for 'accept' )
   repeat
     1 # 1 # out,
     wait 1 # in,
-    dup, 0 # !if (remap-keys) crlf ws ; then drop,
+    dup, 0 # !if (remap-keys) ws ; then drop,
   again
 ;
 
-: >tib ( c- )  TIB # >in # @, +, !, ;
-: ++   ( -  )  1 # >in # +! ;
+: >tib ( c- )  TIB # >in # @, +, !, 1 # >in # +! ;
 
-: eat-leading ( "- )
+: eat-leading ( - )
   repeat
     key dup, emit dup,
-    break-char # @, !if >tib ++ ; then drop,
+    break-char # @, !if >tib ; then drop,
   again ;
 
 : (accept) ( -c )
@@ -149,7 +148,7 @@ variable break-char      ( Holds the delimiter for 'accept' )
     key dup, emit dup,
     break-char # @, =if drop, ; then
     dup, 8 # =if 1 # >in # -! drop, 8 , ' (accept) , then
-    >tib ++
+    >tib
   again ;
 
 : accept ( c- )
@@ -226,15 +225,11 @@ label: base 10 ,
 
 : digits
   repeat dup, push, nums # +, @, over =if -1 # num # !, then pop, 0; 1-, again ;
-: (hex) 16 # digits ;
-: (dec) 10 # digits ;
-: (oct)  8 # digits ;
-: (bin)  2 # digits ;
 : (digit)
-  base # @, 10 # =if (dec) ; then
-  base # @, 16 # =if (hex) ; then
-  base # @,  8 # =if (oct) ; then
-  base # @,  2 # =if (bin) ; then
+  base # @, 10 # =if 10 # digits ; then
+  base # @, 16 # =if 16 # digits ; then
+  base # @,  8 # =if  8 # digits ; then
+  base # @,  2 # =if  2 # digits ; then
 ;
 : digit?
   0 # num # !, (digit) drop, num # @, ;

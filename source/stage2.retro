@@ -41,10 +41,10 @@ create <list>  ( -a )
 ( }}                                                          )
 ( ... global scope, local words not visible ...               )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: find-last-visible last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 : {{ ( - )  last @ <list> ! ;
 : ---reveal---  ( - ) last @ <list> 1+ ! ;
-: }} ( - )  <list> @ find-last-visible ! ;
+here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
+: }} ( - )  <list> @ [ compile ] ! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

@@ -380,7 +380,7 @@ main:
 ' depth        word: depth         ' reset        word: reset
 ' notfound     word: notfound      ' save         word: save
 ' >number      word: >number       ' ok           word: ok
-' listen       word: listen
+' listen       word: listen        ' isnumber?    word: isNumber?
 
 ( Compiler )
 ' t-s"         compiler: s"        ' t-[          compiler: [

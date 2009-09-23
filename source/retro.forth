@@ -1,6 +1,8 @@
 #! ------------------------------------------------------------
 #! Retro, a dialect of Forth
 #! ------------------------------------------------------------
+include nmf.toka
+
    3072 is-data SCRATCH-START
    3584 is-data TIB
    4096 is-data HEAP-START
@@ -91,19 +93,12 @@ label: okmsg     " ok " $,
 
 : .word   ( a- )
   compiler # @, -1 # =if 7 # t-, t-, ; then execute ;
-: .primitive ( a- )
-  dup, @, 0 # !if .word ; then
-  compiler # @, -1 # =if 1+, 1+, @, t-, ; then execute ;
 : .macro  ( a- )
    execute ;
 : .data   ( a- )
    compiler # @, -1 # =if 1 # t-, t-, then ;
-: .compiler ( a- )
-   compiler # @, 0 # =if drop ; then execute ;
 
-' .word     to 'WORD      ' .macro  to 'MACRO
-' .data     to 'DATA      ' .primitive to 'PRIMITIVE
-' .compiler to 'COMPILER
+' .word to 'WORD    ' .macro  to 'MACRO    ' .data to 'DATA
 #! ------------------------------------------------------------
 -1 variable: update
 : redraw  ( - ) update # @, 0; drop, 0 # 3 # out, ;
@@ -168,7 +163,6 @@ variable break-char      ( Holds the delimiter for 'accept' )
 : (:)        ( -   )  last # @, d->class !, t-] 0 # t-, 0 # t-, ;
 : t-:        ( "-  )  create 'WORD  # (:) ;
 : t-macro:   ( "-  )  create 'MACRO # (:) ;
-: t-compiler: ( "- )  create 'COMPILER # (:) ;
 : t-(        ( "-  )  char: ) # accept ;
 #! ------------------------------------------------------------
 : n=n      ( xy-   )  !if 0 # flag # !, then ;
@@ -335,23 +329,20 @@ variable fh     ( framebuffer height )
 main:
   run-on-boot listen
 #! ----------------------------------------------------------
-( Primitives )
-' 1+           primitive: 1+       ' 1-           primitive: 1-
-' swap         primitive: swap     ' drop         primitive: drop
-' and          primitive: and      ' or           primitive: or
-' xor          primitive: xor      ' @            primitive: @
-' !            primitive: !        ' +            primitive: +
-' -            primitive: -        ' *            primitive: *
-' /mod         primitive: /mod     ' <<           primitive: <<
-' >>           primitive: >>       ' nip          primitive: nip
-' dup          primitive: dup      ' in           primitive: in
-' out          primitive: out
-
 ( Words )
+' 1+           word: 1+            ' 1-           word: 1-
+' swap         word: swap          ' drop         word: drop
+' and          word: and           ' or           word: or
+' xor          word: xor           ' @            word: @
+' !            word: !             ' +            word: +
+' -            word: -             ' *            word: *
+' /mod         word: /mod          ' <<           word: <<
+' >>           word: >>            ' nip          word: nip
+' dup          word: dup           ' in           word: in
+' out          word: out           ' accept       word: accept
 ' t-here       word: here          ' t-,          word: ,
 ' t-]          word: ]             ' create       word: create
 ' t-:          word: :             ' t-macro:     word: macro:
-' t-compiler:  word: compiler:     ' accept       word: accept
 ' cr           word: cr            ' emit         word: emit
 ' type         word: type          ' clear        word: clear
 ' words        word: words         ' key          word: key
@@ -374,7 +365,6 @@ main:
 ' bye          word: bye           ' (remap-keys) word: (remap-keys)
 ' with-class   word: with-class    ' .word        word: .word
 ' .macro       word: .macro        ' .data        word: .data
-' .primitive   word: .primitive    ' .compiler    word: .compiler
 ' d->class     word: d->class      ' d->xt        word: d->xt
 ' d->name      word: d->name       ' boot         word: boot
 ' depth        word: depth         ' reset        word: reset
@@ -382,19 +372,16 @@ main:
 ' >number      word: >number       ' ok           word: ok
 ' listen       word: listen        ' isnumber?    word: isNumber?
 
-( Compiler )
-' t-s"         compiler: s"        ' t-[          compiler: [
-' t-;          compiler: ;         ' t-;;         compiler: ;;
-' t-=if        compiler: =if       ' t->if        compiler: >if
-' t-<if        compiler: <if       ' t-!if        compiler: !if
-' t-then       compiler: then      ' t-repeat     compiler: repeat
-' t-again      compiler: again     ' t-0;         compiler: 0;
-' t-push       compiler: push      ' t-pop        compiler: pop
-' t-[']        compiler: [']       ' t-for        compiler: for
-' t-next       compiler: next
-
 ( Macros )
-' t-(          macro: (
+' t-s"         macro: s"        ' t-[          macro: [
+' t-;          macro: ;         ' t-;;         macro: ;;
+' t-=if        macro: =if       ' t->if        macro: >if
+' t-<if        macro: <if       ' t-!if        macro: !if
+' t-then       macro: then      ' t-repeat     macro: repeat
+' t-again      macro: again     ' t-0;         macro: 0;
+' t-push       macro: push      ' t-pop        macro: pop
+' t-[']        macro: [']       ' t-for        macro: for
+' t-next       macro: next      ' t-(          macro: (
 
 ( Data )
   last         data: last          compiler     data: compiler

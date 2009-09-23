@@ -102,7 +102,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 (   ` wordname  =  ['] wordname compile                      )
 (   ` wordname  =  ['] wordname execute                      )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-compiler: `  ( "- )  ' literal, which @ d->class @ compile ;
+macro: `  ( "- )  ' literal, which @ d->class @ compile ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -122,10 +122,10 @@ macro: ." ( "- )
 -1 constant TRUE   ( -f )
  0 constant FALSE  ( -f )
 
-compiler: if    ( f- )
+macro: if    ( f- )
        compiler @ 0; drop TRUE literal, ` =if ;
 
-compiler: ;then ( - )
+macro: ;then ( - )
        compiler @ 0; drop ` ;; ` then ;
 
 : =  ( xy-f )  =if TRUE ;then FALSE ;
@@ -312,13 +312,13 @@ variable blk
 
   : render type cr drop ;
   : s: 32 accept tib keepString literal, ['] render compile ` ;; ;
-  compiler: a: ` over ` =if s: ` then ;
+  macro: a: ` over ` =if s: ` then ;
 
   : .name d->name type cr ;
   : resolve -1 last @ repeat dup d->xt @ @addr =if .name drop 0 ;then 0; @ again ;
   : render type 32 emit drop nextOp resolve 0; drop .contents cr ;
   : x: 32 accept tib keepString literal, ['] render compile ` ;; ;
-  compiler: b: ` over ` =if x: ` then ;
+  macro: b: ` over ` =if x: ` then ;
 
   : decompile
     32 emit

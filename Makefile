@@ -5,7 +5,7 @@ default:
 	@cd tools && gcc build.c -o build
 	@cd tools && ./build fix-image
 	@cd toka && ../tools/build toka
-	@cd source && ../toka/toka build-retro.toka
+	@cd source && ../toka/toka retro.forth
 	@cd source && ../tools/fix-image retroImage
 	@cd source && $(VM) --with stage2.retro >/dev/null
 	@mv source/retroImage* .

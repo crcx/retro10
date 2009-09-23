@@ -1,7 +1,6 @@
 #! ------------------------------------------------------------
-#! This implements an assembler for the Ngaro VM and a cross
-#! compiler providing a MachineForth language. The rest of
-#! Retro is written using this as a base.
+#! Ngaro Machine Forth
+#! (and cross-compiler)
 #! ------------------------------------------------------------
 reset
 
@@ -123,14 +122,12 @@ value| heap origin imageFile mapFile lastop |
 #! is also some code to mark the dictionary pointer
 #! and patch it at the end of the initial dictionary.
 #! ------------------------------------------------------------
-value| 'WORD 'MACRO 'DATA 'PRIMITIVE 'COMPILER link #entries |
+value| 'WORD 'MACRO 'DATA link #entries |
 [ #entries 1 + to #entries ] is e+1
 [ e+1 here link , to link , , wsparse $, ] is entry
 [ 'WORD entry ] is word:
 [ 'MACRO entry ] is macro:
 [ 'DATA entry ] is data:
-[ 'PRIMITIVE entry ] is primitive:
-[ 'COMPILER entry ] is compiler:
 [ link r> ! ] is patch-dictionary
 [ here cells origin + >r ] is mark-dictionary
 
@@ -141,8 +138,3 @@ value| 'WORD 'MACRO 'DATA 'PRIMITIVE 'COMPILER link #entries |
 [ depth 0 <> [ ." BUGS DETECTED!\n" ] ifTrue
   #entries . ." entries\n"
 ] is cross-summary
-
-#! ------------------------------------------------------------
-#! And finally, include the Retro source
-#! ------------------------------------------------------------
-include retro.forth

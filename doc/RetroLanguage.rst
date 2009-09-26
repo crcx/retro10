@@ -193,7 +193,7 @@ This means that the interpreter loop does not need to be
 aware of the type a word has, or of any aspect of the system
 state.
 
-The standard Retro language has five classes defined.
+The standard Retro language has three classes defined.
 
 +-----------+------------+-----------------------------------------+
 | Name      | Data Stack | Address Stack                           |
@@ -209,24 +209,13 @@ The standard Retro language has five classes defined.
 | down custom code at compile time, or which need to have          |
 | different behaviors during compilation.                          |
 +-----------+------------+-----------------------------------------+
-| .primitive| a -        | ``-``                                   |
-+-----------+------------+-----------------------------------------+
-| If interpreting, call the word. If compiling, copy the first     |
-| opcode of the word into the target definition. This is only      |
-| useful for use with words that map directly to processor opcodes.|
-+-----------+------------+-----------------------------------------+
 | .data     | a -        | ``-``                                   |
 +-----------+------------+-----------------------------------------+
 | If interpreting, leave the address on the stack. If compiling,   |
 | compile the address into the target definition as a literal.     |
 +-----------+------------+-----------------------------------------+
-| .compiler | a - a      | ``-``                                   |
-+-----------+------------+-----------------------------------------+
-| If compiling, execute the word. If interpreting, ignore the      |
-| word.                                                            |
-+-----------+------------+-----------------------------------------+
 
-In addition to the five core classes, it is possible to create your
+In addition to the three core classes, it is possible to create your
 own classes. As an example, we'll create a class for naming and
 displaying strings. Our class has the following behavior:
 
@@ -486,79 +475,79 @@ List of Words by Class
 +--------------+--------------+------------+---------------+
 | Name         | Class        | Data Stack | Address Stack |
 +==============+==============+============+===============+
-| 1+           | .primitive   | x-y        |               |
+| 1+           |  .word       | x-y        |               |
 +--------------+--------------+------------+---------------+
 | Increment x by 1                                         |
 +--------------+--------------+------------+---------------+
-| 1-           | .primitive   | x-y        |               |
+| 1-           |  .word       | x-y        |               |
 +--------------+--------------+------------+---------------+
 | Decrement x by 1                                         |
 +--------------+--------------+------------+---------------+
-| swap         | .primitive   | xy-yx      |               |
+| swap         |  .word       | xy-yx      |               |
 +--------------+--------------+------------+---------------+
 | Exchange the positions of the top two stack items        |
 +--------------+--------------+------------+---------------+
-| drop         | .primitive   | xy-x       |               |
+| drop         |  .word       | xy-x       |               |
 +--------------+--------------+------------+---------------+
 | Remove the top item from the stack                       |
 +--------------+--------------+------------+---------------+
-| and          | .primitive   | xy-z       |               |
+| and          |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Bitwise AND                                              |
 +--------------+--------------+------------+---------------+
-| or           | .primitive   | xy-z       |               |
+| or           |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Bitwise OR                                               |
 +--------------+--------------+------------+---------------+
-| xor          | .primitive   | xy-z       |               |
+| xor          |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Bitwise XOR                                              |
 +--------------+--------------+------------+---------------+
-| @            | .primitive   | a-n        |               |
+| @            |  .word       | a-n        |               |
 +--------------+--------------+------------+---------------+
 | Fetch a value from an address                            |
 +--------------+--------------+------------+---------------+
-| !            | .primitive   | na-        |               |
+| !            |  .word       | na-        |               |
 +--------------+--------------+------------+---------------+
 | Store value n into address a                             |
 +--------------+--------------+------------+---------------+
-| ``+``        | .primitive   | xy-z       |               |
+| ``+``        |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Add x to y                                               |
 +--------------+--------------+------------+---------------+
-| ``-``        | .primitive   | xy-z       |               |
+| ``-``        |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Subtract y from x                                        |
 +--------------+--------------+------------+---------------+
-| ``*``        | .primitive   | xy-z       |               |
+| ``*``        |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Multiply x and y                                         |
 +--------------+--------------+------------+---------------+
-| /mod         | .primitive   | xy-qr      |               |
+| /mod         |  .word       | xy-qr      |               |
 +--------------+--------------+------------+---------------+
 | Divide x and y, getting the quotient and remainder       |
 +--------------+--------------+------------+---------------+
-| <<           | .primitive   | xy-z       |               |
+| <<           |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Shift x left by y bits                                   |
 +--------------+--------------+------------+---------------+
-| >>           | .primitive   | xy-z       |               |
+| >>           |  .word       | xy-z       |               |
 +--------------+--------------+------------+---------------+
 | Shift x right by y bits                                  |
 +--------------+--------------+------------+---------------+
-| nip          | .primitive   | xy-y       |               |
+| nip          |  .word       | xy-y       |               |
 +--------------+--------------+------------+---------------+
 | Drop the second item on the stack                        |
 +--------------+--------------+------------+---------------+
-| dup          | .primitive   | x-xx       |               |
+| dup          |  .word       | x-xx       |               |
 +--------------+--------------+------------+---------------+
 | Duplicate the top stack item                             |
 +--------------+--------------+------------+---------------+
-| in           | .primitive   | x-y        |               |
+| in           |  .word       | x-y        |               |
 +--------------+--------------+------------+---------------+
 | Read a value from an I/O port                            |
 +--------------+--------------+------------+---------------+
-| out          | .primitive   | xy-        |               |
+| out          |  .word       | xy-        |               |
 +--------------+--------------+------------+---------------+
 | Send a value to an I/O port                              |
 +--------------+--------------+------------+---------------+
@@ -588,11 +577,6 @@ List of Words by Class
 +--------------+--------------+------------+---------------+
 | Create a new word with a class of **.macro** and turn the|
 | compiler on                                              |
-+--------------+--------------+------------+---------------+
-| compiler:    | .word        | "-         |               |
-+--------------+--------------+------------+---------------+
-| Create a new word with a class of **.compiler** and turn |
-| the compiler on                                          |
 +--------------+--------------+------------+---------------+
 | accept       | .word        | c-         |               |
 +--------------+--------------+------------+---------------+
@@ -783,14 +767,6 @@ List of Words by Class
 +--------------+--------------+------------+---------------+
 | Class handler for data elements                          |
 +--------------+--------------+------------+---------------+
-| .primitive   | .word        | a-         |               |
-+--------------+--------------+------------+---------------+
-| Class handler for simple primitives that can be inlined  |
-+--------------+--------------+------------+---------------+
-| .compiler    | .word        | a-         |               |
-+--------------+--------------+------------+---------------+
-| Class handler for compile-time words                     |
-+--------------+--------------+------------+---------------+
 | d->class     | .word        | a-a        |               |
 +--------------+--------------+------------+---------------+
 | Given a dictionary header, return the class field        |
@@ -837,61 +813,61 @@ List of Words by Class
 +--------------+--------------+------------+---------------+
 | The main interpreter loop                                |
 +--------------+--------------+------------+---------------+
-| s"           | .compiler    | C: "-      |               |
+| s"           | .macro       | C: "-      |               |
 |              |              | R: -$      |               |
 +--------------+--------------+------------+---------------+
 | Parse until " is encounterd. Call **keepString** to move |
 | the string to the permanent string table, and compile the|
 | address of the string into the current definition        |
 +--------------+--------------+------------+---------------+
-| [            | .compiler    |            |               |
+| [            | .macro       |            |               |
 +--------------+--------------+------------+---------------+
 | Turn **compiler** off, but don't end the current         |
 | definition                                               |
 +--------------+--------------+------------+---------------+
-| ;            | .compiler    |            |               |
+| ;            | .macro       |            |               |
 +--------------+--------------+------------+---------------+
 | End the current definition and turn **compiler** off     |
 +--------------+--------------+------------+---------------+
-| ;;           | .compiler    |            |               |
+| ;;           | .macro       |            |               |
 +--------------+--------------+------------+---------------+
 | Compile an exit to the word, but do not end the current  |
 | definiton                                                |
 +--------------+--------------+------------+---------------+
-| =if          | .compiler    | C: -a      |               |
+| =if          | .macro       | C: -a      |               |
 |              |              | R: nn-     |               |
 +--------------+--------------+------------+---------------+
 | Compare two numbers for equality                         |
 +--------------+--------------+------------+---------------+
-| >if          | .compiler    | C: -a      |               |
+| >if          | .macro       | C: -a      |               |
 |              |              | R: nn-     |               |
 +--------------+--------------+------------+---------------+
 | Compare two numbers for greater than                     |
 +--------------+--------------+------------+---------------+
-| <if          | .compiler    | C: -a      |               |
+| <if          | .macro       | C: -a      |               |
 |              |              | R: nn-     |               |
 +--------------+--------------+------------+---------------+
 | Compare two numbers for less than                        |
 +--------------+--------------+------------+---------------+
-| !if          | .compiler    | C: -a      |               |
+| !if          | .macro       | C: -a      |               |
 |              |              | R: nn-     |               |
 +--------------+--------------+------------+---------------+
 | Compare two numbers for inequality                       |
 +--------------+--------------+------------+---------------+
-| then         | .compiler    | C: a-      |               |
+| then         | .macro       | C: a-      |               |
 +--------------+--------------+------------+---------------+
 | End a conditional                                        |
 +--------------+--------------+------------+---------------+
-| repeat       | .compiler    | C: -a      |               |
+| repeat       | .macro       | C: -a      |               |
 +--------------+--------------+------------+---------------+
 | Begin an unconditional loop                              |
 +--------------+--------------+------------+---------------+
-| again        | .compiler    | C: a-      |               |
+| again        | .macro       | C: a-      |               |
 +--------------+--------------+------------+---------------+
 | End an unconditional loop. Branches back to the last     |
 | **repeat**                                               |
 +--------------+--------------+------------+---------------+
-| 0;           | .compiler    | R: n-      |               |
+| 0;           | .macro       | R: n-      |               |
 |              |              | R: n-n     |               |
 +--------------+--------------+------------+---------------+
 | If TOS is zero, exit the word and drop TOS. Otherwise it |
@@ -899,26 +875,26 @@ List of Words by Class
 | is a lightweight control structure borrowed from         |
 | HerkForth                                                |
 +--------------+--------------+------------+---------------+
-| push         | .compiler    | R: n-      | R: -n         |
+| push         | .macro       | R: n-      | R: -n         |
 +--------------+--------------+------------+---------------+
 | Move a value from the data stack to the address stack    |
 +--------------+--------------+------------+---------------+
-| pop          | .compiler    | R: -n      | R: n-         |
+| pop          | .macro       | R: -n      | R: n-         |
 +--------------+--------------+------------+---------------+
 | Move a value from the address stack to the data stack    |
 +--------------+--------------+------------+---------------+
-| [']          | .compiler    | C: "-      |               |
+| [']          | .macro       | C: "-      |               |
 |              |              | R:  -n     |               |
 +--------------+--------------+------------+---------------+
 | Parse for a word name and compile the address of the word|
 | into the current definition.                             |
 +--------------+--------------+------------+---------------+
-| for          | .compiler    | C: -a      |               |
+| for          | .macro       | C: -a      |               |
 |              |              | R: n-      |               |
 +--------------+--------------+------------+---------------+
 | Begin a simple counted loop. Takes a count off the stack |
 +--------------+--------------+------------+---------------+
-| next         | .compiler    | C: a-      |               |
+| next         | .macro       | C: a-      |               |
 +--------------+--------------+------------+---------------+
 | End a simple counted loop. Decrements the counter by 1.  |
 | If 0, execute the rest of the word. Otherwise, jumps back|
@@ -1035,7 +1011,7 @@ List of Words by Class
 | Takes an address, a value, and a count and fills count   |
 | cells of memory starting at address with a value         |
 +--------------+--------------+------------+---------------+
-| `\``         | .compiler    | "-         |               |
+| `\``         | .macro       | "-         |               |
 +--------------+--------------+------------+---------------+
 | Replaces these forms:                                    |
 | ::                                                       |
@@ -1056,12 +1032,12 @@ List of Words by Class
 +--------------+--------------+------------+---------------+
 | Return 0                                                 |
 +--------------+--------------+------------+---------------+
-| if           | .compiler    | C: -a      |               |
+| if           | .macro       | C: -a      |               |
 |              |              | R: f-      |               |
 +--------------+--------------+------------+---------------+
 | Start a conditional. Execute if flag is TRUE             |
 +--------------+--------------+------------+---------------+
-| ;then        | .compiler    | C: a-      |               |
+| ;then        | .macro       | C: a-      |               |
 +--------------+--------------+------------+---------------+
 | Same as **;; then**                                      |
 +--------------+--------------+------------+---------------+

@@ -106,14 +106,6 @@ macro: `  ( "- )  ' literal, which @ d->class @ compile ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( This is a rather common word that can be used to easily     )
-( display a string.                                           )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-macro: ." ( "- )
-   compiler @ 0 =if " type ;; then ` s" ` type ;
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Retro has some simple conditional forms, which tie the      )
 ( comparisons to the flow control. It's often useful to have  )
 ( separate functions for the comparisons, so I define them    )
@@ -132,6 +124,14 @@ macro: ;then ( - )
 : <> ( xy-f )  !if TRUE ;then FALSE ;
 : >  ( xy-f )  >if TRUE ;then FALSE ;
 : <  ( xy-f )  <if TRUE ;then FALSE ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( This is a rather common word that can be used to easily     )
+( display a string.                                           )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+macro: ." ( "- )
+   compiler @ if ` s" ` type ;then " type ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

@@ -1,0 +1,94 @@
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Assembler and Metacompiler for Retro                        )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+
+: char: 32 accept tib @ ;
+
+{{
+  : reclass last @ d->class ! ;
+  : .does compiler @ -1 =if swap literal, compile pop drop ;; then drop ;
+---reveal---
+  macro: does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ;
+}}
+
+variable target
+variable origin
+variable 'WORD
+variable 'MACRO
+variable 'DATA
+variable link
+variable chain
+
+: m,  ( n-  ) target @ ! 1 target +! ;
+: vm: ( n"- ) create , does> @ m, ;
+
+ 0 vm: nop,          1 vm: lit,          2 vm: dup,
+ 3 vm: drop,         4 vm: swap,         5 vm: push,
+ 6 vm: pop,          7 vm: call,         8 vm: jump,
+ 9 vm: ;,           10 vm: >jump,       11 vm: <jump,
+12 vm: !jump,       13 vm: =jump,       14 vm: @,
+15 vm: !,           16 vm: +,           17 vm: -,
+18 vm: *,           19 vm: /mod,        20 vm: and,
+21 vm: or,          22 vm: xor,         23 vm: <<,
+24 vm: >>,          25 vm: 0;           26 vm: 1+,
+27 vm: 1-,          28 vm: in,          29 vm: out,
+30 vm: wait,        98 vm: halt,
+
+here 1024 4 * allot target ! target @ origin !
+jump, 0 m,
+
+: t-here ( -n ) target @ origin @ - ;
+: main:  ( -  ) t-here cr ." MAIN @ " dup . origin @ 1+ ! ;
+: label: ( "- ) t-here constant ;
+: #      ( n- ) lit, m, ;
+: $,     ( $- ) dup getLength for dup @ m, 1+ next 0 m, drop ;
+
+{{
+  variable getxt
+  : .colon getxt @ TRUE =if getxt off ;then call, m, ;
+---reveal---
+  : t: label: nop, nop, ['] .colon last @ d->class ! ;
+  : t' getxt on ;
+}}
+
+{{
+  : cond target @ 0 m, ;
+---reveal---
+  : =if !jump, cond ;
+  : <if >jump, cond ;
+  : >if <jump, cond ;
+  : !if =jump, cond ;
+  : then t-here swap ! nop, ;
+}}
+
+: repeat t-here ;
+: again  jump, m, ;
+
+: variable: label: m, ;
+: variable 0 variable: ;
+
+: entry t-here link @ m, link ! m, m, 32 accept tib $, ;
+: word: 'WORD @ entry ;
+: macro: 'MACRO @ entry ;
+: data: 'DATA @ entry ;
+: patch-dictionary link @ chain @ ! ;
+: mark-dictionary target @ chain ! ;
+
+: set-class ! ;
+
+{{
+  : +! [ 2 , 5 , 14 , 16 , 6 , 15 , ] ;
+  : ++ 1 [ 4 , ] +! ;
+  : ! [ 15 , ] ;
+  : @ [ 14 , ] ;
+  create src 0 ,
+  create dst 0 ,
+  : (copy) for src @ @ dst @ ! src ++ dst ++ next ;
+  : copy ( aan- ) push dst ! src ! pop (copy) ;
+  : save   ( - )  1 4 [ 29 , ] 0 0 [ 29 , 30 , 99 , ] ;
+  ---reveal---
+  : boot-new
+    origin @ 0 4096 copy save ;
+}}
+
+: ; ;, ;; [

@@ -1,128 +1,124 @@
-#! ------------------------------------------------------------
-#! Retro, a dialect of Forth
-#! ------------------------------------------------------------
-include nmf.toka
-
-   3072 is-data SCRATCH-START
-   3584 is-data TIB
-   4096 is-data HEAP-START
-
-begin retroImage
-#! ------------------------------------------------------------
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+3072 constant SCRATCH-START
+3584 constant TIB
+4096 constant HEAP-START
+5000000 constant MAX-IMAGE
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 mark-dictionary    ( Pointer to the most recent dictionary )
 variable last      ( header )
+' last .
 HEAP-START
 variable: heap     ( Starting address of the data/code heap )
-#! ------------------------------------------------------------
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable which     ( Pointer to dictionary header of the most )
                    ( recently looked up word )
 variable compiler  ( Is the compiler on or off? )
-#! ------------------------------------------------------------
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable flag      ( Shared variable used by some primitives )
                    ( It's used as a flag, a counter, etc.    )
-#! ------------------------------------------------------------
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 label: copytag   " RETRO 10" $,
 label: nomatch   " Word Not Found" $,
 label: okmsg     " ok " $,
-#! ------------------------------------------------------------
-: dup  ( n-nn )  dup, ;       : 1+   ( n-n   )  1+, ;
-: 1-   ( n-n  )  1-, ;        : swap ( xy-yx )  swap, ;
-: drop ( n-   )  drop, ;      : and  ( xy-n  )  and, ;
-: or   ( xy-n )  or, ;        : xor  ( xy-n  )  xor, ;
-: @    ( a-n  )  @, ;         : !    ( na-   )  !, ;
-: +    ( xy-n )  +, ;         : -    ( xy-n  )  -, ;
-: *    ( xy-n )  *, ;         : /mod ( xy-qr )  /mod, ;
-: <<   ( xy-n )  <<, ;        : >>   ( xy-n  )  >>, ;
-: out  ( np-  )  out, ;       : in   ( p-n   )  in, ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+t: dup  ( n-nn )  dup, ;       t: 1+   ( n-n   )  1+, ;
+t: 1-   ( n-n  )  1-, ;        t: swap ( xy-yx )  swap, ;
+t: drop ( n-   )  drop, ;      t: and  ( xy-n  )  and, ;
+t: or   ( xy-n )  or, ;        t: xor  ( xy-n  )  xor, ;
+t: @    ( a-n  )  @, ;         t: !    ( na-   )  !, ;
+t: +    ( xy-n )  +, ;         t: -    ( xy-n  )  -, ;
+t: *    ( xy-n )  *, ;         t: /mod ( xy-qr )  /mod, ;
+t: <<   ( xy-n )  <<, ;        t: >>   ( xy-n  )  >>, ;
+t: out  ( np-  )  out, ;       t: in   ( p-n   )  in, ;
 
-: wait ( - )  0 # 0 # out, wait, ;
+t: wait ( - )  0 # 0 # out, wait, ;
 
-: nip   ( xy-y   )  swap, drop, ;
-: over  ( xy-xyx )  push, dup, pop, swap, ;
-: 2drop ( nn-    )  drop, drop, ;
-: not   ( x-y    )  -1 # xor, ;
-: rot   ( xyz-yzx ) push, swap, pop, swap, ;
-: -rot  ( xyz-xzy ) swap, push, swap, pop, ;
-: tuck  ( xy-yxy )  dup, -rot ;
-: 2dup  ( x-xx   )  over over ;
-: on    ( a-     )  -1 # swap, !, ;
-: off   ( a-     )  0 # swap, !, ;
-: /     ( xy-q   )  /mod, nip ;
-: mod   ( xy-r   )  /mod, drop, ;
-: neg   ( x-y    )  -1 # *, ;
-: execute ( a-   )  1-, push, ;
+t: nip   ( xy-y   )  swap, drop, ;
+t: over  ( xy-xyx )  push, dup, pop, swap, ;
+t: 2drop ( nn-    )  drop, drop, ;
+t: not   ( x-y    )  -1 # xor, ;
+t: rot   ( xyz-yzx ) push, swap, pop, swap, ;
+t: -rot  ( xyz-xzy ) swap, push, swap, pop, ;
+t: tuck  ( xy-yxy )  dup, -rot ;
+t: 2dup  ( x-xx   )  over over ;
+t: on    ( a-     )  -1 # swap, !, ;
+t: off   ( a-     )  0 # swap, !, ;
+t: /     ( xy-q   )  /mod, nip ;
+t: mod   ( xy-r   )  /mod, drop, ;
+t: neg   ( x-y    )  -1 # *, ;
+t: execute ( a-   )  1-, push, ;
 
-: @+ ( a-an )  dup, 1+, swap, @, ;
-: !+ ( na-a )  dup, 1+, push, !, pop, ;
-: +! ( na-  )  dup, push, @, +, pop, !, ;
-: -! ( na-  )  dup, push, @, swap, -, pop, !, ;
-#! ------------------------------------------------------------
-: t-here   ( -a  )  heap # @, ;
-: t-,      ( n-  )  t-here !, t-here 1+, heap # !, ;
-: t-]      ( -   )  -1 # compiler # !, ;
-: t-[      ( -   )  0 # compiler # !, ;
-: t-;;     ( -   )  9 # t-, ;
-: t-;      ( -   )  t-;; t-[ ;
-: ($,)     ( a-a )  repeat dup, @, 0; t-, 1+, again ;
-: $        ( a-  )  ($,) drop, 0 # t-, ;
-: t-push   ( n-  )  5 # t-, ;
-: t-pop    ( -n  )  6 # t-, ;
-: compile  ( a-  )  7 # t-, t-, ;
-: literal, ( n-  )  1 # t-, t-, ;
-: t-for    ( R: n-   C: -a )
+t: @+ ( a-an )  dup, 1+, swap, @, ;
+t: !+ ( na-a )  dup, 1+, push, !, pop, ;
+t: +! ( na-  )  dup, push, @, +, pop, !, ;
+t: -! ( na-  )  dup, push, @, swap, -, pop, !, ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+t: t-here   ( -a  )  heap # @, ;
+t: t-,      ( n-  )  t-here !, t-here 1+, heap # !, ;
+t: t-]      ( -   )  -1 # compiler # !, ;
+t: t-[      ( -   )  0 # compiler # !, ;
+t: t-;;     ( -   )  9 # t-, ;
+t: t-;      ( -   )  t-;; t-[ ;
+t: ($,)     ( a-a )  repeat dup, @, 0; t-, 1+, again ;
+t: $        ( a-  )  ($,) drop, 0 # t-, ;
+t: t-push   ( n-  )  5 # t-, ;
+t: t-pop    ( -n  )  6 # t-, ;
+t: compile  ( a-  )  7 # t-, t-, ;
+t: literal, ( n-  )  1 # t-, t-, ;
+t: t-for    ( R: n-   C: -a )
   t-here 5 # t-, ;
-: t-next   ( R: -    C: a- )
+t: t-next   ( R: -    C: a- )
   6 # t-, 27 # t-, 2 # t-, 1 # t-, 0 # t-, 12 # t-, t-, 3 # t-, ;
-: (if)     ( -a )
+t: (if)     ( -a )
   t-here 0 # t-, ;
-: t-=if    ( R: xy-  C: -a )
+t: t-=if    ( R: xy-  C: -a )
   12 # t-, (if) ;
-: t->if    ( R: xy-  C: -a )
+t: t->if    ( R: xy-  C: -a )
   11 # t-, (if) ;
-: t-<if    ( R: xy-  C: -a )
+t: t-<if    ( R: xy-  C: -a )
   10 # t-, (if) ;
-: t-!if    ( R: xy-  C: -a )
+t: t-!if    ( R: xy-  C: -a )
   13 # t-, (if) ;
-: t-then   ( R: -    C: a- )
+t: t-then   ( R: -    C: a- )
   t-here swap, !, 0 # t-, ;
-: t-repeat ( R: -    C: -a )
+t: t-repeat ( R: -    C: -a )
   t-here ;
-: t-again  ( R: -    C: a- )
+t: t-again  ( R: -    C: a- )
   8 # t-, t-, ;
-: t-0;     ( n-n || n -  )  25 # t-, ;
+t: t-0;     ( n-n || n -  )  25 # t-, ;
 
-: .word   ( a- )
-  compiler # @, -1 # =if 7 # t-, t-, ; then execute ;
-: .macro  ( a- )
+t: .word   ( a- )
+   compiler # @, -1 # =if 7 # t-, t-, ; then execute ;
+t: .macro  ( a- )
    execute ;
-: .data   ( a- )
+t: .data   ( a- )
    compiler # @, -1 # =if 1 # t-, t-, then ;
 
-' .word to 'WORD    ' .macro  to 'MACRO    ' .data to 'DATA
-#! ------------------------------------------------------------
+' .word 'WORD set-class
+' .macro 'MACRO set-class
+' .data 'DATA set-class
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 -1 variable: update
-: redraw  ( - ) update # @, 0; drop, 0 # 3 # out, ;
-
-: emit   ( c- )  1 # 2 # out, wait redraw ;
-: cr     ( -  ) 10 # emit ;
-: clear  ( -  ) -1 # emit ;
-
-: (type) ( a-a ) repeat @+ 0; emit again ;
-: type   ( a-  ) update # off (type) drop, update # on redraw ;
-#! ------------------------------------------------------------
+t: redraw ( -  ) update # @, 0; drop, 0 # 3 # out, ;
+t: emit   ( c- )  1 # 2 # out, wait redraw ;
+t: cr     ( -  ) 10 # emit ;
+t: clear  ( -  ) -1 # emit ;
+t: (type) ( a-a ) repeat @+ 0; emit again ;
+t: type   ( a-  ) update # off (type) drop, update # on redraw ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable >in             ( Offset into the TIB )
 variable break-char      ( Holds the delimiter for 'accept' )
 -1 variable: whitespace  ( Allow extended whitespace )
 
-: (remap-keys) ( c-c ) ;
-: ws ( c-c )
+t: (remap-keys) ( c-c ) ;
+t: ws ( c-c )
   dup, 13 # =if drop, 10 # then
   whitespace # @, 0; drop,
   dup,  9 # =if drop, 32 # ; then
   dup, 10 # =if drop, 32 # ; then
 ;
 
-: key ( -c )
+t: key ( -c )
   repeat
     1 # 1 # out,
     wait 1 # in,
@@ -130,46 +126,45 @@ variable break-char      ( Holds the delimiter for 'accept' )
   again
 ;
 
-: >tib ( c- )  TIB # >in # @, +, !, 1 # >in # +! ;
+t: >tib ( c- )  TIB # >in # @, +, !, 1 # >in # +! ;
 
-: eat-leading ( - )
+t: eat-leading ( - )
   repeat
     key dup, emit dup,
     break-char # @, !if >tib ; then drop,
   again ;
 
-: (accept) ( -c )
+t: (accept) ( -c )
   repeat
     key dup, emit dup,
     break-char # @, =if drop, ; then
-    dup, 8 # =if 1 # >in # -! drop, 8 , ' (accept) , then
+    dup, 8 # =if 1 # >in # -! drop, 8 m, ' (accept) m, then
     >tib
   again ;
 
-: accept ( c- )
+t: accept ( c- )
   break-char # !, 0 # >in # !, eat-leading (accept) 0 # >tib ;
-#! ------------------------------------------------------------
-: d->class ( a-a )  1+, ;
-: d->xt    ( a-a )  1+, 1+, ;
-: d->name  ( a-a )  1+, 1+, 1+, ;
-
-: create   ( "-  )   t-here              ( Entry Start )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+t: d->class ( a-a )  1+, ;
+t: d->xt    ( a-a )  1+, 1+, ;
+t: d->name  ( a-a )  1+, 1+, 1+, ;
+t: create   ( "-  )   t-here             ( Entry Start )
                      last # @, t-,       ( Link to previous )
                      last # !,           ( Set as newest )
-                     'DATA # t-,         ( Class = .data )
+                     ' .data # t-,       ( Class = .data )
                      t-here 0 # t-,      ( XT )
                      32 # accept TIB # $ ( Name )
                      t-here swap, !, ;   ( Patch XT to HERE )
-: (:)        ( -   )  last # @, d->class !, t-] 0 # t-, 0 # t-, ;
-: t-:        ( "-  )  create 'WORD  # (:) ;
-: t-macro:   ( "-  )  create 'MACRO # (:) ;
-: t-(        ( "-  )  char: ) # accept ;
-#! ------------------------------------------------------------
-: n=n      ( xy-   )  !if 0 # flag # !, then ;
-: get-set  ( ab-xy )  @, swap, @, ;
-: next-set ( ab-cd )  1+, swap, 1+, swap, ;
+t: (:)        ( -   )  last # @, d->class !, t-] 0 # t-, 0 # t-, ;
+t: :          ( "-  )  create ' .word # (:) ;
+t: t-macro:   ( "-  )  create ' .macro # (:) ;
+t: t-(        ( "-  )  char: ) # accept ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+t: n=n      ( xy-   )  !if 0 # flag # !, then ;
+t: get-set  ( ab-xy )  @, swap, @, ;
+t: next-set ( ab-cd )  1+, swap, 1+, swap, ;
 
-: (skim)
+t: (skim)
   repeat
     2dup @, swap, @, +, 0; drop,
     2dup get-set n=n next-set
@@ -177,28 +172,28 @@ variable break-char      ( Holds the delimiter for 'accept' )
   again
 ;
 
-: compare   ( $$-f )
+t: compare   ( $$-f )
   -1 # flag # !,
   (skim) 2drop flag # @, ;
 
-: (strlen)  ( a-na )
+t: (strlen)  ( a-na )
   repeat dup, @, 0; drop, next-set again ;
 
-: getLength ( $-n )
+t: getLength ( $-n )
   0 # swap, (strlen) drop, ;
 
 variable SAFE
 
-: (reset-$)  SCRATCH-START # SAFE # !, ;
-: (next)     1 # SAFE # +! ;
-: (save)     repeat @+ 0; SAFE # @, !, (next) again ;
+t: (reset-$)  SCRATCH-START # SAFE # !, ;
+t: (next)     1 # SAFE # +! ;
+t: (save)     repeat @+ 0; SAFE # @, !, (next) again ;
 
-: tempString  ( a-a )
+t: tempString  ( a-a )
   (reset-$) (save) drop, 0 # SAFE # @, !, SCRATCH-START # ;
 
-: (save) dup, getLength repeat 0; push, @+ t-, pop, 1-, again ;
+t: (save) dup, getLength repeat 0; push, @+ t-, pop, 1-, again ;
 
-: keepString  ( a-a )
+t: keepString  ( a-a )
   dup, getLength 1+, 1+, 1+, t-here +,
   8 # t-, t-,
   t-here push,
@@ -206,64 +201,64 @@ variable SAFE
   pop,
 ;
 
-: t-"  ( "-a )
+t: t-"  ( "-a )
   char: " # accept TIB # tempString ;
-: t-s" ( R: -a  C: "- )
+t: t-s" ( R: -a  C: "- )
   t-" keepString 1 # t-, t-, ;
-#! ------------------------------------------------------------
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable #value        variable num
 variable #ok           variable negate?
 
 label: nums " 0123456789ABCDEF" $,
-label: base 10 ,
+label: base 10 m,
 
-: digits
+t: digits
   repeat dup, push, nums # +, @, over =if -1 # num # !, then pop, 0; 1-, again ;
-: (digit)
+t: (digit)
   base # @, 10 # =if 10 # digits ; then
   base # @, 16 # =if 16 # digits ; then
   base # @,  8 # =if  8 # digits ; then
   base # @,  2 # =if  2 # digits ; then
 ;
-: digit?
+t: digit?
   0 # num # !, (digit) drop, num # @, ;
 
-: char>digit ( c-n )
+t: char>digit ( c-n )
   char: 0 # -,
   base # @, 16 # =if dup, 16 # >if 7 # -, then then ;
 
-: isNegative?
+t: isNegative?
   ( a-a+1 )
   dup, @, char: - # =if -1 # negate? # !, 1+, ; then
   1 # negate? # !, ;
 
-: (convert)
+t: (convert)
   repeat
     dup, @, 0; char>digit #value # @, base # @, *, +,
     #value # !, 1+,
   again ;
 
-: >number ( $-n )
+t: >number ( $-n )
   isNegative? 0 # #value # !, (convert) drop,
   #value # @, negate? # @, *, ;
 
-: (isnumber)
+t: (isnumber)
   repeat
     dup, @, 0; digit? flag # @, and, flag # !, 1+,
   again ;
 
-: isnumber?
+t: isnumber?
   isNegative? -1 # flag # !, (isnumber) drop,
   flag # @, ;
 
-: <#> repeat base # @, /mod, swap, nums # +, @, swap, 0; again ;
-: neg? dup, 0 # >if ; then 45 # emit -1 # *, ;
-: display repeat 0; emit again ;
-: . neg? 0 # swap <#> display 32 # emit ;
-#! ------------------------------------------------------------
+t: <#> repeat base # @, /mod, swap, nums # +, @, swap, 0; again ;
+t: neg? dup, 0 # >if ; then 45 # emit -1 # *, ;
+t: display repeat 0; emit again ;
+t: . neg? 0 # swap <#> display 32 # emit ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable found
 
-: (search)
+t: (search)
   repeat
     dup, d->name TIB # compare
     -1 # =if which # !, found # on ; then
@@ -271,65 +266,64 @@ variable found
   again
 ;
 
-: search
+t: search
   found # off last # @, (search) ;
 
-: t-'    ( "-a )
+t: t-'    ( "-a )
   32 # accept search
   found # @, -1 # =if which # @, d->xt @, ; then 0 #
   found # on ;
-: t-[']  ( R: -a   C: "- )
+t: t-[']  ( R: -a   C: "- )
   1 # t-, t-' t-, ;
-#! ------------------------------------------------------------
-: :devector ( a-  )  dup, 0 # swap, !, 1+, 0 # swap, !, ;
-: :is       ( aa- )  dup, 8 # swap, !, 1+, !, ;
-: devector  ( "-  )  t-' :devector ;
-: is        ( a"- )  t-' :is ;
-#! ------------------------------------------------------------
-: save   ( - )  1 # 4 # out, wait ;
-: bye    ( - )  jump, MAX-IMAGE , ;
-: words  ( - )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+t: :devector ( a-  )  dup, 0 # swap, !, 1+, 0 # swap, !, ;
+t: :is       ( aa- )  dup, 8 # swap, !, 1+, !, ;
+t: devector  ( "-  )  t-' :devector ;
+t: is        ( a"- )  t-' :is ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+t: save   ( - )  1 # 4 # out, wait ;
+t: bye    ( - )  halt, ;
+t: words  ( - )
   last # @, repeat dup, d->name type 32 # emit @, 0; again ;
-: depth  ( -n )
+t: depth  ( -n )
   -5 # 5 # out, wait, 5 # in, ;
-: reset  ( ...- )
-  depth : (reset) 0; push, drop, pop, 1-, (reset) ;
-#! ------------------------------------------------------------
+t: reset  ( ...- )
+  depth repeat 0; push, drop, pop, 1-, again ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable #mem   ( Amount of memory provided )
 variable fb     ( canvas present?    )
 variable fw     ( framebuffer width  )
 variable fh     ( framebuffer height )
 
-: boot ( - )
+t: boot ( - )
   copytag # type cr ;
-: run-on-boot ( - )
+t: run-on-boot ( - )
   -1 # 5 # out, wait 5 # in, #mem # !,  ( Memory Size )
   -2 # 5 # out, wait 5 # in, fb # !,    ( Canvas Present? )
   -3 # 5 # out, wait 5 # in, fw # !,    ( Canvas Width )
   -4 # 5 # out, wait 5 # in, fh # !,    ( Canvas Height )
   boot ;
-#! ------------------------------------------------------------
-: with-class   ( ac- ) execute ;
-: notfound     ( -   ) cr nomatch # type cr ;
-: the->xt      ( a-n ) which # @, d->xt @, ;
-: the->class   ( a-n ) which # @, d->class @, ;
-: tib->number? ( -f  ) TIB # isnumber? ;
-: tib->number  ( -n  ) TIB # >number .data ;
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+t: with-class   ( ac- ) execute ;
+t: notfound     ( -   ) cr nomatch # type cr ;
+t: the->xt      ( a-n ) which # @, d->xt @, ;
+t: the->class   ( a-n ) which # @, d->class @, ;
+t: tib->number? ( -f  ) TIB # isnumber? ;
+t: tib->number  ( -n  ) TIB # >number .data ;
 
-: word?   ( - )
+t: word?   ( - )
   found # @, -1 # =if the->xt the->class with-class then ;
-: number? ( - )
+t: number? ( - )
   found # @, 0 # =if tib->number? -1 # =if tib->number ; then
   notfound then ;
-: ok      ( - )
+t: ok      ( - )
   compiler # @, 0 # =if cr okmsg # type then ;
-: listen  ( - )
+t: listen  ( - )
   repeat ok 32 # accept search word? number? again ;
-#! ----------------------------------------------------------
+
 main:
-  run-on-boot listen
-#! ----------------------------------------------------------
-( Words )
+  run-on-boot listen ;
+
 ' 1+           word: 1+            ' 1-           word: 1-
 ' swap         word: swap          ' drop         word: drop
 ' and          word: and           ' or           word: or
@@ -342,7 +336,7 @@ main:
 ' out          word: out           ' accept       word: accept
 ' t-here       word: here          ' t-,          word: ,
 ' t-]          word: ]             ' create       word: create
-' t-:          word: :             ' t-macro:     word: macro:
+' :            word: :             ' t-macro:     word: macro:
 ' cr           word: cr            ' emit         word: emit
 ' type         word: type          ' clear        word: clear
 ' words        word: words         ' key          word: key
@@ -372,7 +366,6 @@ main:
 ' >number      word: >number       ' ok           word: ok
 ' listen       word: listen        ' isnumber?    word: isNumber?
 
-( Macros )
 ' t-s"         macro: s"        ' t-[          macro: [
 ' t-;          macro: ;         ' t-;;         macro: ;;
 ' t-=if        macro: =if       ' t->if        macro: >if
@@ -383,7 +376,6 @@ main:
 ' t-[']        macro: [']       ' t-for        macro: for
 ' t-next       macro: next      ' t-(          macro: (
 
-( Data )
   last         data: last          compiler     data: compiler
   TIB          data: tib           update       data: update
   fb           data: fb            fw           data: fw
@@ -392,6 +384,4 @@ main:
   whitespace   data: whitespace    base         data: base
 
 patch-dictionary
-#! ----------------------------------------------------------
-cross-summary
-end
+boot-new

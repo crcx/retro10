@@ -1,0 +1,14 @@
+{
+  : header cr ." function loadImage() { var a; for (a = 0; a < 32768; a++) image[a]=0;" cr ;
+  : footer ." }" cr ;
+  : dump-cell ( a- )
+    dup @ 0; drop
+    ." image[" dup . ." ]=" dup @ . ." ;" cr ;
+  : dump-image
+    header
+    0 here for dump-cell 1+ next drop
+    footer
+    ;
+  ' dump-image
+} execute
+bye

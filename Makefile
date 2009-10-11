@@ -16,4 +16,4 @@ midp:
 	rm -f js0
 
 clean:
-	rm -f build.log
+	rm -f build.log retroImage.js Img.java

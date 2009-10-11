@@ -1,0 +1,23 @@
+{
+  : header
+    ." package Retro;" cr
+    ." public class Img {" cr
+    ."  private Retroforth root;" cr
+    ."  public Img(Retroforth root) {" cr
+    ."    this.root = root;" cr
+    ."    loadImage();" cr
+    ."  }" cr
+    ." public void loadImage() {" cr
+  ;
+  : footer ." }" cr ." }" cr ;
+  : dump-cell ( a- )
+    dup @ 0; drop
+    ." image[" dup . ." ]=" dup @ . ." ;" cr ;
+  : dump-image
+    header
+    0 here for dump-cell 1+ next drop
+    footer
+    ;
+  ' dump-image
+} execute
+bye

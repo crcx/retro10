@@ -178,6 +178,17 @@ macro: ." ( "- )
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( does>                                                       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  : reclass last @ d->class ! ;
+  : .does compiler @ -1 =if swap literal, compile pop drop ;; then drop ;
+---reveal---
+  macro: does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ;
+}}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This implements quotes and a few words to work with them.   )
 ( Quotes are anonymous, nestable blocks of code.              )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

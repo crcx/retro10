@@ -57,13 +57,13 @@ jump, 0 m,
 }}
 
 {{
-  : cond target @ 0 m, ;
+  : cond ( -a ) target @ 0 m, ;
 ---reveal---
-  : =if !jump, cond ;
-  : <if >jump, cond ;
-  : >if <jump, cond ;
-  : !if =jump, cond ;
-  : then t-here swap ! nop, ;
+  : =if  ( -a ) !jump, cond ;
+  : <if  ( -a ) >jump, cond ;
+  : >if  ( -a ) <jump, cond ;
+  : !if  ( -a ) =jump, cond ;
+  : then ( a- ) t-here swap ! nop, ;
 }}
 
 : repeat ( -a ) t-here ;
@@ -72,12 +72,12 @@ jump, 0 m,
 : variable: ( n"- ) label: m, ;
 : variable  ( "-  ) 0 variable: ;
 
-: entry t-here link @ m, link ! m, m, 32 accept tib $, ;
-: word: 'WORD @ entry ;
-: macro: 'MACRO @ entry ;
-: data: 'DATA @ entry ;
-: patch-dictionary link @ chain @ ! ;
-: mark-dictionary target @ chain ! ;
+: entry  ( a"- ) t-here link @ m, link ! m, m, 32 accept tib $, ;
+: word:  ( a"- ) 'WORD @ entry ;
+: macro: ( a"- ) 'MACRO @ entry ;
+: data:  ( a"- ) 'DATA @ entry ;
+: patch-dictionary ( - ) link @ chain @ ! ;
+: mark-dictionary  ( - ) target @ chain ! ;
 
 : set-class ( aa- ) ! ;
 

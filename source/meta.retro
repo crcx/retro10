@@ -4,23 +4,22 @@
 ( License: ISC                                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Some useful words that'll be helpful later on               )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: vars for variable next ;
 : char: 32 accept tib @ ;
 
-{{
-  : reclass last @ d->class ! ;
-  : .does compiler @ -1 =if swap literal, compile pop drop ;; then drop ;
----reveal---
-  macro: does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ;
-}}
 
-variable target
-variable origin
-variable 'WORD
-variable 'MACRO
-variable 'DATA
-variable link
-variable chain
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Variables used in the target image [classes, dictionary, etc)
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+7 vars target origin 'WORD 'MACRO 'DATA link chain
 
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( The assembler                                               )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : m,  ( n-  ) target @ ! 1 target +! ;
 : vm: ( n"- ) create , does> @ m, ;
 
@@ -45,12 +44,16 @@ jump, 0 m,
 : #      ( n- ) lit, m, ;
 : $,     ( $- ) dup getLength for dup @ m, 1+ next 0 m, drop ;
 
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( And now the metacompiler                                    )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
   variable getxt
   : .colon getxt @ TRUE =if getxt off ;then call, m, ;
 ---reveal---
-  : t: label: nop, nop, ['] .colon last @ d->class ! ;
-  : t' getxt on ;
+  : t: ( "- ) label: nop, nop, ['] .colon last @ d->class ! ;
+  : t' ( "-a ) getxt on ;
 }}
 
 {{
@@ -63,11 +66,11 @@ jump, 0 m,
   : then t-here swap ! nop, ;
 }}
 
-: repeat t-here ;
-: again  jump, m, ;
+: repeat ( -a ) t-here ;
+: again  ( a- ) jump, m, ;
 
-: variable: label: m, ;
-: variable 0 variable: ;
+: variable: ( n"- ) label: m, ;
+: variable  ( "-  ) 0 variable: ;
 
 : entry t-here link @ m, link ! m, m, 32 accept tib $, ;
 : word: 'WORD @ entry ;
@@ -76,19 +79,25 @@ jump, 0 m,
 : patch-dictionary link @ chain @ ! ;
 : mark-dictionary target @ chain ! ;
 
-: set-class ! ;
+: set-class ( aa- ) ! ;
 
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( The last bit is the trickiest: we need to safely relocate   )
+( the new image over the old one. Since we can't use *any*    )
+( code that calls into the old image, we must redefine all    )
+( words necessary here.                                       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
+  2 vars src dst
   : +! [ 2 , 5 , 14 , 16 , 6 , 15 , ] ;
   : ++ 1 [ 4 , ] +! ;
   : ! [ 15 , ] ;
   : @ [ 14 , ] ;
-  create src 0 ,
-  create dst 0 ,
   : (copy) for src @ @ dst @ ! src ++ dst ++ next ;
   : copy ( aan- ) push dst ! src ! pop (copy) ;
-  : save   ( - )  1 4 [ 29 , ] 0 0 [ 29 , 30 , 99 , ] ;
-  ---reveal---
+  : save ( - )    1 4 [ 29 , ] 0 0 [ 29 , 30 , 99 , ] ;
+---reveal---
   : boot-new
     origin @ 0 4096 copy save ;
 }}

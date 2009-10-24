@@ -1,4 +1,8 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Retro                                                       )
+( Copyright [c] 2009, Charles Childers                        )
+( License: ISC                                                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 3072 constant SCRATCH-START
 3584 constant TIB
 4096 constant HEAP-START

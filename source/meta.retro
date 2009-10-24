@@ -1,5 +1,7 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Assembler and Metacompiler for Retro                        )
+( Copyright [c] 2009, Charles Childers                        )
+( License: ISC                                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
 : char: 32 accept tib @ ;

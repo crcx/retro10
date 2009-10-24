@@ -1,4 +1,7 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Copyright [c] 2009, Charles Childers                        )
+( License: ISC                                                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This contains the second stage of the Retro language. It's  )
 ( a collection of useful words and tools that make things     )
 ( nicer overall.                                              )
@@ -289,15 +292,11 @@ variable blk
 ( All done! Fill the blocks with spaces, and we're good to go )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 64 red.set#
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Retrospect by Charles Childers                              )
+
+
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This contains a set of words I find useful while debugging  )
 ( code.                                                       )
-(                                                             )
-( Stack comments are provided for words which are intended    )
-( to be used directly. Internal factors do not have the stack )
-( comments provided.                                          )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
 {{

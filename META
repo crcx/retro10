@@ -1,6 +1,5 @@
 Introduction
 ------------
-
 Retro is built using a metacompiler. This consists of two parts,
 an assembler, and a target compiler.
 
@@ -92,23 +91,25 @@ words that can be used to make things much cleaner:
 
 These words are covered in Table 2.
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-To be covered:
-: entry  ( a"- ) t-here link @ m, link ! m, m, 32 accept tib $, ;
-: word:  ( a"- ) 'WORD @ entry ;
-: macro: ( a"- ) 'MACRO @ entry ;
-: data:  ( a"- ) 'DATA @ entry ;
-: patch-dictionary ( - ) link @ chain @ ! ;
-: mark-dictionary  ( - ) target @ chain ! ;
+The final major piece of the metacompiler is support for creating
+the initial classes and dictionary. Three variables ('WORD 'MACRO
+and 'DATA) are created for the initial classes. You can use
+'set-class' to set these to point to words in the target image.
+This *must* be done before you can create the initial dictionary.
 
-: set-class ( aa- ) ! ;
+The dictionary can be built using the following words:
 
-t-here
-returns a pointer to the current memory location in the target
-memory area, adjusted to be relative to a base of 0.
+  word:
+  macro:
+  data:
+  patch-dictionary
+  mark-dictionary
 
-How to load new image?
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Use 'mark-dictionary' before creating the variable for the
+dictionary chain. After the dictionary is created, use the
+'patch-dictionary' word to update the variable with the actual
+dictionary pointer.
+
 
 =======================================================
 Table 1: Opcodes

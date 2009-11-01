@@ -361,5 +361,38 @@ variable blk
   : see  ( "- ) getWord cr repeat .addr decompile nextOp more? again ;
 }}
 
+
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Make the most recently created word run only if the compiler)
+( is on.                                                      )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  : warn compiler @ not if pop 2drop ." Error: compile-only" cr then ;
+---reveal---
+  : .compiler warn execute ;
+  : compile-only ['] .compiler last @ d->class ! ;
+}}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Remap a lot of the macros to be compile-only                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: c: ' drop ['] .compiler which @ d->class dup . ! ;
+
+c: =if     c: >if
+c: <if     c: !if
+c: if      c: then
+c: for     c: next
+c: ;then   c: next
+c: for     c: [']
+c: pop     c: push
+c: 0;      c: again
+c: repeat  c: ;;
+c: ;       c: s"
+
+forget c:
+
 save
 bye

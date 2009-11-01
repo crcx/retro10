@@ -161,7 +161,6 @@ t: create   ( "-  )   t-here             ( Entry Start )
                      t-here swap, !, ;   ( Patch XT to HERE )
 t: (:)        ( -   )  last # @, d->class !, t-] 0 # t-, 0 # t-, ;
 t: :          ( "-  )  create ' .word # (:) ;
-t: t-macro:   ( "-  )  create ' .macro # (:) ;
 t: t-(        ( "-  )  char: ) # accept ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: n=n      ( xy-   )  !if 0 # flag # !, then ;
@@ -340,7 +339,7 @@ main:
 ' out          word: out           ' accept       word: accept
 ' t-here       word: here          ' t-,          word: ,
 ' t-]          word: ]             ' create       word: create
-' :            word: :             ' t-macro:     word: macro:
+' :            word: :
 ' cr           word: cr            ' emit         word: emit
 ' type         word: type          ' clear        word: clear
 ' words        word: words         ' key          word: key

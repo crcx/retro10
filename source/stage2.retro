@@ -99,14 +99,18 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 }}
 
 
-( )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Make the most recently created word execute into a compiler )
+( macro.                                                      )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : immediate ['] .macro last @ d->class ! ;
+
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Some shortcuts that save some typing and keep the code a    )
 ( bit cleaner in macros.                                      )
-(   ` wordname  =  ['] wordname compile                      )
-(   ` wordname  =  ['] wordname execute                      )
+(   ` wordname  =  ['] wordname compile                       )
+(   ` wordname  =  ['] wordname execute                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : `  ( "- )  ' literal, which @ d->class @ compile ; immediate
 
@@ -298,14 +302,14 @@ variable blk
   here is (e) ] setup remap ;
 }
 
-: red.set#
+: set-blocks
   #-blocks ! #mem @ #-block-size #-blocks @ * - offset ! new ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( All done! Fill the blocks with spaces, and we're good to go )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-64 red.set#
+64 set-blocks
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

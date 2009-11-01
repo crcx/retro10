@@ -193,7 +193,7 @@ This means that the interpreter loop does not need to be
 aware of the type a word has, or of any aspect of the system
 state.
 
-The standard Retro language has three classes defined.
+The standard Retro language has four classes defined.
 
 +-----------+------------+-----------------------------------------+
 | Name      | Data Stack | Address Stack                           |
@@ -208,6 +208,11 @@ The standard Retro language has three classes defined.
 | Always call the word. This is normally used for words that lay   |
 | down custom code at compile time, or which need to have          |
 | different behaviors during compilation.                          |
++-----------+------------+-----------------------------------------+
+| .compiler | a -        | ``-``                                   |
++-----------+------------+-----------------------------------------+
+| Call the word when the compiler is on. If compiler is off, do    |
+| nothing.                                                         |
 +-----------+------------+-----------------------------------------+
 | .data     | a -        | ``-``                                   |
 +-----------+------------+-----------------------------------------+
@@ -278,11 +283,8 @@ compile.
   : .string ( a — )
     compiler @ 0 =if type ;; then 1 , , ['] type compile ;
 
-And now we have a new class handler. The second part is to make
-this useful. We'll make a creator word called **displayString:** to
-take a string and make it into a new word using our .string
-class. This will take a string from the stack, make it
-permanent, and give it a name.
+And now we have a new class handler. The second part is to use
+the new class.
 
 Tip:
   New dictionary entries are made using create. The class can
@@ -571,11 +573,6 @@ List of Words by Class
 | :            | .word        | "-         |               |
 +--------------+--------------+------------+---------------+
 | Create a new word with a class of **.word** and turn the |
-| compiler on                                              |
-+--------------+--------------+------------+---------------+
-| macro:       | .word        | "-         |               |
-+--------------+--------------+------------+---------------+
-| Create a new word with a class of **.macro** and turn the|
 | compiler on                                              |
 +--------------+--------------+------------+---------------+
 | accept       | .word        | c-         |               |

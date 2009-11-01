@@ -9,8 +9,8 @@ virtual machine, and an image file which contains the actual
 Retro language.
 
 This is the source code for the image file. You will need the
-VM to fully build this. Modify the VM line in the Makefile to
-point to your VM.
+VM to build this. Modify the VM line in the Makefile to point
+to your VM.
 
 The latest docmentation can be found in the 'doc' directory.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

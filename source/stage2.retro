@@ -165,6 +165,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 : octal   ( - )  8 base ! ;
 : binary  ( - )  2 base ! ;
 
+
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Search for a word by name                                   )
 ( It takes a string containing the name of the word to look   )
@@ -199,7 +200,6 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( This implements quotes and a few words to work with them.   )
 ( Quotes are anonymous, nestable blocks of code.              )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-
 : [[ compiler @ 8 , here 0 , here compiler on ; immediate
 : ]] 9 , swap here swap ! swap compiler ! .data ; immediate
 
@@ -209,6 +209,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 : I pop pop pop pop dup push swap push swap push swap push ;
 : iterate swap dup for push dup push execute pop pop 1- next 2drop ;
 : +iterate swap 1 swap for push dup push execute pop pop 1+ next 2drop ;
+
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This is a block editor that I've been using for many years. )
@@ -273,7 +274,6 @@ variable blk
   : (type)  for dup @ emit 1+ next ;
   : type    (type) drop ;
   : space   32 emit ;
-
   : row     . dup 64 type 64 + cr ;
   : .rows   0 row 1 row 2 row 3 row
             4 row 5 row 6 row 7 row ;
@@ -316,7 +316,6 @@ variable blk
 ( This contains a set of words I find useful while debugging  )
 ( code.                                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-
 {{
   variable *addr
 
@@ -354,14 +353,11 @@ variable blk
   : vector? @addr 0 =if *addr @ 1+ @ 0 =if pop pop 2drop then then ;
   : more? header? vector? ;
   : getWord ' drop which @ d->xt @ *addr ! ;
-
 ---reveal---
   : dump ( an- )  cr for @+ over 1- . . cr next drop ;
   : show ( an- ) swap *addr ! cr for .addr decompile nextOp next ;
   : see  ( "- ) getWord cr repeat .addr decompile nextOp more? again ;
 }}
-
-
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

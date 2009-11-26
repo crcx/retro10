@@ -8,17 +8,17 @@
 4096 constant HEAP-START
 5000000 constant MAX-IMAGE
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-mark-dictionary    ( Pointer to the most recent dictionary )
-variable last      ( header )
+mark-dictionary    ( Pointer to the most recent dictionary    )
+variable last      ( header                                   )
 HEAP-START
-variable: heap     ( Starting address of the data/code heap )
+variable: heap     ( Starting address of the data/code heap   )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable which     ( Pointer to dictionary header of the most )
-                   ( recently looked up word )
-variable compiler  ( Is the compiler on or off? )
+                   ( recently looked up word                  )
+variable compiler  ( Is the compiler on or off?               )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-variable flag      ( Shared variable used by some primitives )
-                   ( It's used as a flag, a counter, etc.    )
+variable flag      ( Shared variable used by some primitives  )
+                   ( It's used as a flag, a counter, etc.     )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 label: copytag   " RETRO 10" $,
 label: nomatch   " Word Not Found" $,
@@ -109,9 +109,9 @@ t: clear  ( -  ) -1 # emit ;
 t: (type) ( a-a ) repeat @+ 0; emit again ;
 t: type   ( a-  ) update # off (type) drop, update # on redraw ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-variable >in             ( Offset into the TIB )
-variable break-char      ( Holds the delimiter for 'accept' )
--1 variable: whitespace  ( Allow extended whitespace )
+variable >in             ( Offset into the TIB                )
+variable break-char      ( Holds the delimiter for 'accept'   )
+-1 variable: whitespace  ( Allow extended whitespace          )
 
 t: (remap-keys) ( c-c ) ;
 t: ws ( c-c )

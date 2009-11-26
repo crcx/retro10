@@ -50,7 +50,7 @@ t: /     ( xy-q   )  /mod, nip ;
 t: mod   ( xy-r   )  /mod, drop, ;
 t: neg   ( x-y    )  -1 # *, ;
 t: execute ( a-   )  1-, push, ;
-
+t: later ( - )  pop, pop, swap, push, push, ;
 t: @+ ( a-an )  dup, 1+, swap, @, ;
 t: !+ ( na-a )  dup, 1+, push, !, pop, ;
 t: +! ( na-  )  dup, push, @, +, pop, !, ;
@@ -338,7 +338,7 @@ main:
 ' out          word: out           ' accept       word: accept
 ' t-here       word: here          ' t-,          word: ,
 ' t-]          word: ]             ' create       word: create
-' :            word: :
+' :            word: :             ' later        word: later
 ' cr           word: cr            ' emit         word: emit
 ' type         word: type          ' clear        word: clear
 ' words        word: words         ' key          word: key

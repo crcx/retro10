@@ -375,7 +375,7 @@ variable blk
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Remap a lot of the macros to be compile-only                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: c: ' drop ['] .compiler which @ d->class dup . ! ;
+: c: ' drop ['] .compiler which @ d->class ! ;
 
 c: =if     c: >if
 c: <if     c: !if

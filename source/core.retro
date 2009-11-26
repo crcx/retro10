@@ -10,7 +10,6 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 mark-dictionary    ( Pointer to the most recent dictionary )
 variable last      ( header )
-' last .
 HEAP-START
 variable: heap     ( Starting address of the data/code heap )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

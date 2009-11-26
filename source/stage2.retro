@@ -289,7 +289,7 @@ variable blk
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {
   variable ws
-  : nofilter ( - ) whitespace dup off @ ws ! later ws @ whitespace ! ;
+  : nofilter ( - ) whitespace dup @ ws ! off later ws @ whitespace ! ;
   : getline  ( - ) line-ending @ accept ;
   : setup    ( nn-aan ) tib swap tib getLength ;
   here is (ia) ] nofilter (line) + getline setup copy v ;

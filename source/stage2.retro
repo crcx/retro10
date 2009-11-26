@@ -196,21 +196,6 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( This implements quotes and a few words to work with them.   )
-( Quotes are anonymous, nestable blocks of code.              )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: [[ compiler @ 8 , here 0 , here compiler on ; immediate
-: ]] 9 , swap here swap ! swap compiler ! .data ; immediate
-
-: ifTrue swap TRUE =if execute ;then drop ;
-: ifFalse swap FALSE =if execute ;then drop ;
-
-: I pop pop pop pop dup push swap push swap push swap push ;
-: iterate swap dup for push dup push execute pop pop 1- next 2drop ;
-: +iterate swap 1 swap for push dup push execute pop pop 1+ next 2drop ;
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This is a block editor that I've been using for many years. )
 ( It's simple, and doesn't have a lot of features, but it is  )
 ( more than enough for most of my prototyping work.           )

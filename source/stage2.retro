@@ -34,8 +34,7 @@
 (                                                             )
 ( ... back to global scope ...                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-create <list>  ( -a )
-       0 , 0 , 0 , 0 , 0 ,
+create <list>  ( -a )  0 , 0 , 0 , 0 , 0 ,
 : { ( - ) last @ <list> @ 1+ <list> + ! <list> ++ ;
 : } ( - ) <list> -- <list> @ 1+ <list> + @ last ! ;
 
@@ -190,7 +189,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
   : reclass last @ d->class ! ;
-  : .does compiler @ -1 =if swap literal, compile pop drop ;; then drop ;
+  : .does compiler @ if swap literal, compile pop drop ;; then drop ;
 ---reveal---
   : does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ; immediate
 }}

@@ -329,7 +329,8 @@ variable blk
   : s: 32 accept tib keepString literal, ['] render compile ` ;; ;
   : a: ` over ` =if s: ` then ; immediate
 
-  : .name 40 emit 32 emit d->name type 32 emit 41 emit ;
+  : .wrap 40 emit 32 emit later 32 emit 41 emit ;
+  : .name .wrap d->name type ;
   : resolve -1 last @ repeat dup d->xt @ @addr =if .name ;then 0; @ again ;
   : render type 32 emit drop nextOp dup .contents resolve drop cr ;
   : x: 32 accept tib keepString literal, ['] render compile ` ;; ;

@@ -9,6 +9,13 @@
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Shortcuts for incrementing and decrementing variables       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: ++  ( a- )  1 swap +! ;
+: --  ( a- )  1 swap -! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( These words provide a limited degree of control over the    )
 ( visibility of words.                                        )
 (                                                             )
@@ -29,8 +36,8 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 create <list>  ( -a )
        0 , 0 , 0 , 0 , 0 ,
-: { ( - ) last @ <list> @ 1+ <list> + ! 1 <list> +! ;
-: } ( - ) 1 <list> -! <list> @ 1+ <list> + @ last ! ;
+: { ( - ) last @ <list> @ 1+ <list> + ! <list> ++ ;
+: } ( - ) <list> -- <list> @ 1+ <list> + @ last ! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -64,13 +71,6 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 : variable:  ( n"- )  create , ;
 : variable   ( "-  )  0 variable: ;
 : constant   ( n"- )  create last @ d->xt ! ;
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Shortcuts for incrementing and decrementing variables       )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: ++  ( a- )  1 swap +! ;
-: --  ( a- )  1 swap -! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -255,8 +255,8 @@ variable blk
 : s   ( n- ) blk ! v ;
 : d   ( n- ) (line) 32 64 fill v ;
 : x   ( -  ) (block) 32 512 fill v ;
-: p   ( -  ) -1 blk +! v ;
-: n   ( -  ) 1 blk +! v ;
+: p   ( -  ) blk -- v ;
+: n   ( -  ) blk ++ v ;
 : ia  ( nn"- )
   whitespace @ push whitespace off
   (line) + push line-ending @ accept tib pop
@@ -319,7 +319,7 @@ variable blk
 {{
   variable *addr
 
-  : nextOp 1 *addr +! ;
+  : nextOp *addr ++ ;
   : @addr *addr @ @ ;
   : .contents @addr . ;
   : .addr *addr @ . ;

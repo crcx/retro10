@@ -1,3 +1,8 @@
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Retro                                                       )
+( Copyright [c] 2009, Charles Childers                        )
+( License: ISC                                                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {
   : header cr ." function loadImage() { var a; for (a = 0; a < 32768; a++) image[a]=0;" cr ;
   : footer ." }" cr ;

@@ -4,6 +4,13 @@
 ( License: ISC                                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Configuration                                               )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+4096 constant IMAGE-SIZE
+
+
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Some useful words that'll be helpful later on               )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -35,7 +42,7 @@
 27 vm: 1-,          28 vm: in,          29 vm: out,
 30 vm: wait,        98 vm: halt,
 
-here 1024 4 * allot target ! target @ origin !
+here IMAGE-SIZE allot target ! target @ origin !
 jump, 0 m,
 
 : t-here ( -n ) target @ origin @ - ;
@@ -99,7 +106,7 @@ jump, 0 m,
   : save ( - )    1 4 [ 29 , ] 0 0 [ 29 , 30 , 99 , ] ;
 ---reveal---
   : boot-new
-    origin @ 0 4096 copy save ;
+    origin @ 0 IMAGE-SIZE copy save ;
 }}
 
 : ; ;, ;; [

@@ -16,7 +16,7 @@ js:
 
 midp:
 	$(VM) --with tools/image2midp.retro >js0
-	sed '1,10d' js0 | grep -v ok >Img.java
+	sed '1,10d' js0 | sed s'/ \]/\]/g' | sed 's/ \;/\;/g' | grep -v ok >Img.java
 	rm -f js0
 
 clean:

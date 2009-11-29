@@ -83,7 +83,7 @@ t: t-<if    ( R: xy-  C: -a )
 t: t-!if    ( R: xy-  C: -a )
   13 # t-, (if) ;
 t: t-then   ( R: -    C: a- )
-  t-here swap, !, 0 # t-, ;
+  t-here swap, !, ;
 t: t-repeat ( R: -    C: -a )
   t-here ;
 t: t-again  ( R: -    C: a- )

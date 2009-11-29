@@ -70,7 +70,7 @@ jump, 0 m,
   : <if  ( -a ) >jump, cond ;
   : >if  ( -a ) <jump, cond ;
   : !if  ( -a ) =jump, cond ;
-  : then ( a- ) t-here swap ! nop, ;
+  : then ( a- ) t-here swap ! ;
 }}
 
 : repeat ( -a ) t-here ;

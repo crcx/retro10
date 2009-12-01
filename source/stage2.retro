@@ -106,12 +106,12 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Some shortcuts that save some typing and keep the code a    )
-( bit cleaner in macros.                                      )
-(   ` wordname  =  ['] wordname compile                       )
-(   ` wordname  =  ['] wordname execute                       )
+( ` is similar to POSTPONE in ANS FORTH. It compiles code to  )
+( execute the following word with its class handler.          )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: `  ( "- )  ' literal, which @ d->class @ compile ; immediate
+: ` ( "- )
+  ' dup 0 !if literal, which @ d->class @ compile ;; then
+  drop tib >number literal, ['] .data compile ; immediate
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

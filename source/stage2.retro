@@ -231,7 +231,6 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( The memory layout and basic configuration.                  )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable #-blocks
-512 constant #-block-size
 variable offset
 
 10 variable: line-ending
@@ -251,7 +250,7 @@ variable blk
 : n   ( -  ) blk ++ v ;
 : ia  ( nn"- ) (ia) ;
 : i   ( n"- ) 0 swap ia v ;
-: new ( -  ) offset @ 32 #-block-size #-blocks @ * fill ;
+: new ( -  ) offset @ 32 512 #-blocks @ * fill ;
 : e   ( -  ) (block) 512 eval ;
 
 
@@ -286,7 +285,7 @@ variable blk
 }
 
 : set-blocks
-  #-blocks ! #mem @ #-block-size #-blocks @ * - offset ! new ;
+  #-blocks ! #mem @ 512 #-blocks @ * - offset ! new ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -309,7 +308,7 @@ variable blk
     dup 1000    <if 32 emit then
     dup 100     <if 32 emit then
     dup 10      <if 32 emit then
-    dup 1       <if  8 emit then
+    dup 0       <if  8 emit then
     drop
   ;
 
@@ -318,7 +317,7 @@ variable blk
   : resolve   ( -   ) last @ repeat dup d->xt @ addr @ @ =if .name ;then 0; @ again ;
 
   : token     ( "-  ) 32 accept tib keepString literal, ;
-  : .op       ( a-  ) dup getLength swap type 5 swap - 0; for 32 emit next ;
+  : .op       ( a-  ) dup getLength swap type 6 swap - 0; for 32 emit next ;
   : .symbol   ( "-  ) token ` .op ` drop ; immediate
   : .value    (  -  ) addr ++ addr @ @ . pad resolve ;
   : sym:      ( "-  ) ` over ` =if ` .symbol ` ;then ; immediate

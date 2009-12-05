@@ -153,7 +153,8 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Allow changing the class of a word                          )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: reclass ( a"- ) ' drop which @ d->class ! ;
+: reclass  ( a-  ) last @ d->class ! ;
+: reclass: ( a"- ) ' drop which @ d->class ! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -187,12 +188,8 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( does>                                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-{{
-  : reclass last @ d->class ! ;
-  : .does compiler @ if swap literal, compile pop drop ;; then drop ;
----reveal---
-  : does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ; immediate
-}}
+: .does compiler @ if swap literal, compile pop drop ;; then drop ;
+: does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ; immediate
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

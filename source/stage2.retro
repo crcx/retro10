@@ -143,6 +143,13 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Useful for range checking                                   )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: within ( xul-f )
+  rot dup push > pop swap push < pop + -2 = ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This is a rather common word that can be used to easily     )
 ( display a string.                                           )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -268,8 +275,7 @@ variable blk
   : x       ." +---:---+---:---" ;
   : bar     space space x x x x cr ;
   : vb      bar blk @ block .rows drop bar ;
-  : status  .block ;
-  here is (v) ] clear vb status ;
+  here is (v) ] clear vb .block ;
 }
 
 
@@ -323,7 +329,7 @@ variable blk
   : sym:      ( "-  ) ` over ` =if ` .symbol ` ;then ; immediate
   : sym+:     ( "-  ) ` over ` =if ` .symbol ` .value ` ;then ; immediate
 
-  : .ascii    ( c-  ) dup 32 >if dup 128 <if 39 emit emit 39 emit ;then then drop ;
+  : .ascii    ( c-  ) dup 32 128 within if 39 emit emit 39 emit then ;
 
   : decompile ( -   )
     addr @ @

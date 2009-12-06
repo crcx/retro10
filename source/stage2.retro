@@ -9,17 +9,33 @@
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Shortcuts for incrementing and decrementing variables       )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: ++  ( a- )  1 swap +! ;
-: --  ( a- )  1 swap -! ;
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Allows Retro to "forget" a word, and anything defined after )
 ( it.                                                         )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : forget ( "- ) ' drop which @ dup heap ! @ last ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Special class for words that correspond to opcodes. Inlines )
+( if compiling, calls if interpreting.                        )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: .primitive ( a- )
+  dup @ 0 =if compiler @ -1 =if 2 + @ , ;; then then .word ;
+
+: p: ( "- ) ' drop ['] .primitive which @ d->class ! ;
+p: 1+     p: 1-     p: swap   p: drop
+p: and    p: or     p: xor    p: @
+p: !      p: +      p: -      p: *
+p: /mod   p: <<     p: >>     p: nip
+p: dup    p: in     p: out
+forget p:
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Shortcuts for incrementing and decrementing variables       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: ++  ( a- )  1 swap +! ;
+: --  ( a- )  1 swap -! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

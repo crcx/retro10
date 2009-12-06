@@ -1,7 +1,7 @@
 The Retro Language
 ==================
 :Author: Charles Childers
-:Version: 10.3 (20090910)
+:Version: 10.3 (20091205)
 
 
 ===========================
@@ -24,6 +24,8 @@ browser.
 The code and documentation for Retro are provided under
 an open source license.
 
+This documentation covers the core Retro language. The
+virtual machine and library are covered separately.
 
 ==========================
 Section 2: Getting Started
@@ -33,15 +35,18 @@ Obtaining
 ---------
 Retro can be downloaded from http://retroforth.org
 
-Both binaries and source snapshots are provided. We recommend
-that you use the provided binary distribution unless you need
-to build from source.
+The Retro language is stored in a single file, containing a
+binary snapshot called a retroImage ("image" for short).
 
-You will need to get a copy of the Ngaro VM for your operating
-system and processor. You will also need to get a copy of the
-current Retro image file (retroImage). The VM should be kept in
-your path, and the retroImage should be in the current working
-directory.
+Most users can use the image file distributed on retroforth.org,
+but if you want to customize the basic system you can build a
+new image from the source files.
+
+To build a new image file, your will need a copy of the Ngaro VM
+for your operating system and processor. You will also need to get
+a copy of the current Retro image file (retroImage). The VM should
+be kept in your path, and the retroImage should be in the current
+working directory.
 
 Developers who want to keep up with the latest changes are encouraged
 to use Git. We have a repository at http://github.com/crcx/retro10 which
@@ -54,8 +59,6 @@ If you do choose to build the image from scratch, you will need a
 Unix-like operating system (BSD, Linux, OS X) and the following
 tools:
 
-- GCC (4.x recommended)
-- Binutils
 - Make
 - Ngaro VM
 
@@ -110,10 +113,6 @@ reload or retype everything.
 You can also use the vector functionality in Retro to replace/alter
 most of the existing words to meet your needs.
 
-Tip:
-  The JavaScript implementation does not support saving images at
-  this time.
-
 =========================
 Section 3: Implementation
 =========================
@@ -148,9 +147,10 @@ Will compile to:
   call .
   ;
 
-Simple operations that map to single instructions are
-inlined by the Retro compiler, saving some call/return
-overhead. Other optimizations are also possible.
+Simple operations that map to single instructions can
+(optionally) be inlined by the Retro compiler, saving
+some call/return overhead. Other optimizations are also
+possible.
 
 Interpreting and Compiling
 --------------------------
@@ -168,10 +168,6 @@ word. If not found, **number?** tries to convert it to a
 number. If this fails as well, an error is displayed. In any
 case, exection repeats until a fatal error arises, or until
 the user executes **bye**.
-
-For simplicity sake, the number conversion code in Retro
-only supports decimal (base 10). No other base is supported
-at this time.
 
 There is no separate compilation process. In Retro, the
 **compiler** is nothing more than a state variable that the
@@ -295,13 +291,13 @@ Tip:
 ::
 
   : displayString: ( "name" — )
-    create ['] .string last @ d->class ! keepString last @ d->xt ! ;
+    create ['] .string reclass keepString last @ d->xt ! ;
 
 This uses **create** to make a new word, then sets the class to
 **.string** and the xt of the word to the string. It also makes the
 string permanent using keepString. last is a variable pointing
-to the most recently created dictionary entry. The two words
-**d->class** and **d->xt** are dictionary field accessors and are used
+to the most recently created dictionary entry. The words **d->class**,
+**d->xt**, and **d->name** are dictionary field accessors and are used
 to provide portable access to fields in the dictionary.
 
 We can now test the new class:
@@ -320,8 +316,8 @@ Vectors are another important concept in Retro.
 
 Most Forth systems provide a way to define a word which can
 have its meaning altered later. Retro goes a step further by
-allowing all words defined using **:** or **macro:** to be
-redefined. Words which can be redefined are called *vectors*.
+allowing all words defined using **:** to be redefined. Words
+which can be redefined are called *vectors*.
 
 Vectors can be replaced by using **is**, or returned to their
 original definition with **devector**. For instance:
@@ -575,6 +571,14 @@ List of Words by Class
 | Create a new word with a class of **.word** and turn the |
 | compiler on                                              |
 +--------------+--------------+------------+---------------+
+| immediate    | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| Set last defined word to .macro class                    |
++--------------+--------------+------------+---------------+
+| compile-only | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| Set last defined word to .compiler class                 |
++--------------+--------------+------------+---------------+
 | accept       | .word        | c-         |               |
 +--------------+--------------+------------+---------------+
 | Accept input until character *c* is found. Results are   |
@@ -759,6 +763,11 @@ List of Words by Class
 | .macro       | .word        | a-         |               |
 +--------------+--------------+------------+---------------+
 | Class handler for macros                                 |
++--------------+--------------+------------+---------------+
+| .compiler    | .word        | a-         |               |
++--------------+--------------+------------+---------------+
+| Class handler for words that can only be called by the   |
+| compiler                                                 |
 +--------------+--------------+------------+---------------+
 | .data        | .word        | n-         |               |
 +--------------+--------------+------------+---------------+
@@ -1015,6 +1024,7 @@ List of Words by Class
 |                                                          |
 | ` wordname  =  ['] wordname compile                      |
 | ` wordname  =  ['] wordname execute                      |
+| ` number    =  number literal,                           |
 +--------------+--------------+------------+---------------+
 | ."           | .macro       | "-         |               |
 +--------------+--------------+------------+---------------+
@@ -1059,81 +1069,53 @@ List of Words by Class
 | Parse a word name, and remove that word and all words    |
 | defined after it from memory                             |
 +--------------+--------------+------------+---------------+
-
-
-=======================
-Section 5: Block Editor
-=======================
-
-Introduction
-------------
-Retro ships with a small block editor. This is based on a
-series of earlier editors, and has a few nice features:
-
-- Blocks are stored in the image
-- External tools allow extracting and moving blocks to a
-  new image
-- All editing words are vectors allowing more control over
-  the editor
-
-Tip:
-  Line and column numbers start at 0
-
-The Words
----------
-+--------------+-------------------------------------+
-| Usage        | Description                         |
-+==============+=====================================+
-|     # s      | Select a new block                  |
-+--------------+-------------------------------------+
-|       p      | Previous block                      |
-+--------------+-------------------------------------+
-|       n      | Next block                          |
-+--------------+-------------------------------------+
-|     # i ..   | Insert .. into line                 |
-+--------------+-------------------------------------+
-|  # #2 ia ..  | Insert .. into line [#2] starting at|
-|              | column [#]                          |
-+--------------+-------------------------------------+
-|      x       | Erase the current block             |
-+--------------+-------------------------------------+
-|    # d       | Erase the specified line            |
-+--------------+-------------------------------------+
-|      v       | Display the current block           |
-+--------------+-------------------------------------+
-|      e       | Evaluate Block                      |
-+--------------+-------------------------------------+
-|      new     | Erase all blocks                    |
-+--------------+-------------------------------------+
-
-
-
-=====================
-Section 6: Retrospect
-=====================
-
-Introduction
-------------
-Retrospect is a debugging aid. It provides a decompiler,
-memory dumper, and other tools that may prove useful in
-better understanding your code and the compiler.
-
-The Words
----------
-+--------------+--------------+------------+---------------+
-| Name         | Class        | Data Stack | Address Stack |
-+==============+==============+============+===============+
-| dump         | .word        | an-        |               |
-+--------------+--------------+------------+---------------+
-| Dump n values from the memory location starting at a     |
-+--------------+--------------+------------+---------------+
-| show         | .word        | an-        |               |
-+--------------+--------------+------------+---------------+
-| Decompile n instructions starting at address a           |
-+--------------+--------------+------------+---------------+
 | see          | .word        | "-         |               |
 +--------------+--------------+------------+---------------+
 | Decompile a word back to source. Parses for a word name, |
 | then attempts to detect the end of the word. May display |
 | the dictionary header for the following word as well.    |
++--------------+--------------+------------+---------------+
+| s            | .word        | n-         |               |
++--------------+--------------+------------+---------------+
+| Select a new block                                       |
++--------------+--------------+------------+---------------+
+| p            | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| Go back one block                                        |
++--------------+--------------+------------+---------------+
+| n            | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| Advance to the next block                                |
++--------------+--------------+------------+---------------+
+| ia           | .word        | cl"-       |               |
++--------------+--------------+------------+---------------+
+| Insert text into block at line l, starting at column c   |
++--------------+--------------+------------+---------------+
+| i            | .word        | n"-        |               |
++--------------+--------------+------------+---------------+
+| Insert text into block at line n, starting at column 0   |
++--------------+--------------+------------+---------------+
+| x            | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| Delete the current block                                 |
++--------------+--------------+------------+---------------+
+| d            | .word        | n-         |               |
++--------------+--------------+------------+---------------+
+| Delete line n from current block                         |
++--------------+--------------+------------+---------------+
+| v            | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| View the current block                                   |
++--------------+--------------+------------+---------------+
+| e            | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| Evaluate current block                                   |
++--------------+--------------+------------+---------------+
+| new          | .word        | -          |               |
++--------------+--------------+------------+---------------+
+| Delete all blocks                                        |
++--------------+--------------+------------+---------------+
+| set-blocks   | .word        | n-         |               |
++--------------+--------------+------------+---------------+
+| Initialize the block array to n blocks, then calls "new" |
 +--------------+--------------+------------+---------------+

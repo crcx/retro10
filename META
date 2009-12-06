@@ -1,25 +1,24 @@
-Introduction
-------------
-Retro is built using a metacompiler. This consists of two parts,
-an assembler, and a target compiler.
+RETRO's Metacompiler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Retro is built using a metacompiler. The metacompiler ("meta")
+consists of two parts: an assembler, and a target compiler.
 
-The assembler provides symbolic names for the opcodes, support
-for setting an entry point, and support for labels. Code using
-it will compile to a special memory area set aside, but with a
-base address of 0. You *can not* invoke assembled code until
-it is relocated by the metacompiler.
+The assembler provides the core functionality for labels and
+the Ngaro instruction set. It stores code to a special memory
+area, with jumps and label references being relocated as if
+the base address was zero. It is not possible to invoke code
+written with meta before the final relocation.
 
-The target compiler provides colon definitions, conditionals,
-and loops, all compiling into the target memory region. It also
-contains support for setting up the initial classes and the
-initial dictionary.
-
-The metacompiler also contains code to relocate the new image
-over the old one.
+The target compiler extends the assembler to provide a machine
+forth with colon definitions, conditionals, and loops. It also
+has support for building an initial dictionary and a few core
+word classes. Meta also contains code to relocate the compiled
+code and save it, replacing the retroImage with the newly
+compiled code.
 
 
 Using the metacompiler
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 When the metacompiler is loaded, it initializes a target memory
 area of 4096 cells in size. Two variables ('target' and
 'origin') are created and set to point to the start of this
@@ -109,6 +108,7 @@ Use 'mark-dictionary' before creating the variable for the
 dictionary chain. After the dictionary is created, use the
 'patch-dictionary' word to update the variable with the actual
 dictionary pointer.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 =======================================================
@@ -176,5 +176,4 @@ Table 2: Target Compiler
  variable:    Create a variable with an initial value
  variable     Create a variable with a value of 0
 =======================================================
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

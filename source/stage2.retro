@@ -143,6 +143,14 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( pow = b^p                                                   )
+( r = fetch copy of top value on return stack                 )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: pow       ( bp-n ) over here ! 1- 0; for here @ * next ;
+: r         ( -n   ) ` pop ` dup ` push ; immediate
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Useful for range checking                                   )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : within ( xul-f )
@@ -306,17 +314,7 @@ variable blk
 {{
   variable addr
 
-  : pad       ( -   )
-    addr @ @
-    dup 1000000 <if 32 emit then
-    dup 100000  <if 32 emit then
-    dup 10000   <if 32 emit then
-    dup 1000    <if 32 emit then
-    dup 100     <if 32 emit then
-    dup 10      <if 32 emit then
-    dup 0       <if  8 emit then
-    drop
-  ;
+  : pad       ( -    ) addr @ @ 6 for dup base @ r pow <if 32 emit then next ;
 
   : .wrap     ( -   ) ." ( " later ."  )" ;
   : .name     ( a-  ) .wrap d->name type ;

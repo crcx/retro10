@@ -40,8 +40,8 @@ variable blk
 : (block)   blk @ block ;
 : (line)    64 * (block) + ;
 
-: (v) ;
-: (ia) ;
+stub (v)
+stub (ia)
 : v   ( -  ) (v) ;
 : s   ( n- ) blk ! v ;
 : d   ( n- ) (line) 32 64 fill v ;

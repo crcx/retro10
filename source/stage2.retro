@@ -153,6 +153,12 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( stub creates an empty word that exists as a vector point    )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: stub ` : ` ; ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Retro has some simple conditional forms, which tie the      )
 ( comparisons to the flow control. It's often useful to have  )
 ( separate functions for the comparisons, so I define them    )
@@ -177,8 +183,8 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( pow = b^p                                                   )
 ( r = fetch copy of top value on return stack                 )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: pow       ( bp-n ) over here ! 1- 0; for here @ * next ;
-: r         ( -n   ) ` pop ` dup ` push ; compile-only
+: pow ( bp-n ) over here ! 1- 0; for here @ * next ;
+: r   ( -n   ) ` pop ` dup ` push ; compile-only
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

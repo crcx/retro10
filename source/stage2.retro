@@ -16,13 +16,20 @@
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Allow changing the class of a word                          )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: reclass  ( a-  ) last @ d->class ! ;
+: reclass: ( a"- ) ' drop which @ d->class ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Special class for words that correspond to opcodes. Inlines )
 ( if compiling, calls if interpreting.                        )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : .primitive ( a- )
   dup @ 0 =if compiler @ -1 =if 2 + @ , ;; then then .word ;
 
-: p: ( "- ) ' drop ['] .primitive which @ d->class ! ;
+: p: ( "- ) ['] .primitive reclass: ;
 p: 1+     p: 1-     p: swap   p: drop
 p: and    p: or     p: xor    p: @
 p: !      p: +      p: -      p: *
@@ -32,17 +39,32 @@ forget p:
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Make the most recently created word run only if the compiler)
+( is on.                                                      )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: .compiler    ( a- ) compiler @ -1 =if execute ;; then drop ;
+: compile-only ( "- ) ['] .compiler reclass ;
+
+: c: ['] .compiler reclass: ;
+c: =if     c: >if   c: <if     c: !if
+c: then  c: for     c: next    c: [']
+c: pop     c: push  c: 0;      c: again
+c: repeat  c: ;;    c: ;       c: s"
+forget c:
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Make the most recently created word execute into a compiler )
+( macro.                                                      )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: immediate ['] .macro reclass ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Shortcuts for incrementing and decrementing variables       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : ++  ( a- )  1 swap +! ;
 : --  ( a- )  1 swap -! ;
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Allow changing the class of a word                          )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: reclass  ( a-  ) last @ d->class ! ;
-: reclass: ( a"- ) ' drop which @ d->class ! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -122,13 +144,6 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Make the most recently created word execute into a compiler )
-( macro.                                                      )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: immediate ['] .macro reclass ;
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( ` is similar to POSTPONE in ANS FORTH. It compiles code to  )
 ( execute the following word with its class handler.          )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -147,10 +162,10 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
  0 constant FALSE  ( -f )
 
 : if ( f- )
-  compiler @ 0; drop TRUE literal, ` =if ; immediate
+  compiler @ 0; drop TRUE literal, ` =if ; compile-only
 
 : ;then ( - )
-  compiler @ 0; drop ` ;; ` then ; immediate
+  compiler @ 0; drop ` ;; ` then ; compile-only
 
 : =  ( xy-f )  =if TRUE ;then FALSE ;
 : <> ( xy-f )  !if TRUE ;then FALSE ;
@@ -163,7 +178,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( r = fetch copy of top value on return stack                 )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : pow       ( bp-n ) over here ! 1- 0; for here @ * next ;
-: r         ( -n   ) ` pop ` dup ` push ; immediate
+: r         ( -n   ) ` pop ` dup ` push ; compile-only
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -213,7 +228,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( does>                                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : .does compiler @ if swap literal, compile pop drop ;; then drop ;
-: does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ; immediate
+: does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ; compile-only
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -233,36 +248,6 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
   : eval   ( an- ) setup remap ;
 }}
 
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Make the most recently created word run only if the compiler)
-( is on.                                                      )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-{{
-  : warn compiler @ not if pop 2drop ." Error: compile-only" cr then ;
----reveal---
-  : .compiler warn execute ;
-  : compile-only ['] .compiler reclass ;
-}}
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( Remap a lot of the macros to be compile-only                )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: c: ' drop ['] .compiler which @ d->class ! ;
-
-c: =if     c: >if
-c: <if     c: !if
-c: if      c: then
-c: for     c: next
-c: ;then   c: next
-c: for     c: [']
-c: pop     c: push
-c: 0;      c: again
-c: repeat  c: ;;
-c: ;       c: s"
-
-forget c:
 
 save
 bye

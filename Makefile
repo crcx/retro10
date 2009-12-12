@@ -2,9 +2,16 @@ VM = ~/retro
 
 default: image errors
 
-image:
+image: core stage2 stage3
+
+core:
 	$(VM) --with source/core.retro --with source/meta.retro >build.log
+
+stage2:
 	$(VM) --with source/stage2.retro >>build.log
+
+stage3:
+	$(VM) --with source/stage3.retro >>build.log
 
 errors:
 	cat build.log | grep -v ok

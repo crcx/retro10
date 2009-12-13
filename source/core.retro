@@ -285,8 +285,6 @@ t: is        ( a"- )  t-' :is ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: save   ( - )  1 # 4 # out, wait ;
 t: bye    ( - )  halt, ;
-t: words  ( - )
-  last # @, repeat dup, d->name type 32 # emit @, 0; again ;
 t: depth  ( -n )
   -5 # 5 # out, wait, 5 # in, ;
 t: reset  ( ...- )
@@ -341,7 +339,6 @@ main:
 ' :            word: :             ' later        word: later
 ' cr           word: cr            ' emit         word: emit
 ' type         word: type          ' clear        word: clear
-' words        word: words         ' key          word: key
 ' over         word: over          ' 2drop        word: 2drop
 ' not          word: not           ' rot          word: rot
 ' -rot         word: -rot          ' tuck         word: tuck
@@ -367,6 +364,7 @@ main:
 ' notfound     word: notfound      ' save         word: save
 ' >number      word: >number       ' ok           word: ok
 ' listen       word: listen        ' isnumber?    word: isNumber?
+' key          word: key
 
 ' t-s"         macro: s"        ' t-[          macro: [
 ' t-;          macro: ;         ' t-;;         macro: ;;

@@ -16,7 +16,8 @@ stage3:
 errors:
 	cat build.log | grep -v ok
 
-js:
+js: image
+	$(VM) --with source/extras/canvas.retro --shrink >>build.log
 	$(VM) --with tools/image2js.retro >js0
 	sed '1,10d' js0 | grep -v ok >retroImage.js
 	rm -f js0

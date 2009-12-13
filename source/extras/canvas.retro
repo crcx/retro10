@@ -1,0 +1,33 @@
+( Mouse Support )
+: mouse  ( -xy ) 1 7 out wait ;
+: click? ( -f )  2 7 out wait ;
+
+( Canvas Support )
+: setColor ( c- ) 1 6 out wait ;
+: pixel ( xy- ) 2 6 out wait ;
+: box ( xyhw- ) 3 6 out wait ;
+: solidBox ( xyhw- ) 4 6 out wait ;
+: vline ( xyh- ) 5 6 out wait ;
+: hline ( xyw- ) 6 6 out wait ;
+: circle ( xyw- ) 7 6 out wait ;
+: solidCircle ( xyw- ) 8 6 out wait ;
+
+( Colors )
+: black  0 setColor ;
+: blue   1 setColor ;
+: green  2 setColor ;
+: cyan   3 setColor ;
+: red    4 setColor ;
+: purple 5 setColor ;
+: brown  6 setColor ;
+: gray   7 setColor ;
+: darkgray 8 setColor ;
+: brightblue 9 setColor ;
+: brightgreen 10 setColor ;
+: brightcyan  11 setColor ;
+: brightred   12 setColor ;
+: magenta 13 setColor ;
+: yellow 14 setColor ;
+: white 15 setColor ;
+
+save bye

@@ -167,7 +167,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( stub creates an empty word that exists as a vector point    )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: stub ` : ` ; ;
+: stub ( "- ) ` : ` ; ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -179,11 +179,9 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 -1 constant TRUE   ( -f )
  0 constant FALSE  ( -f )
 
-: if ( f- )
-  compiler @ 0; drop TRUE literal, ` =if ; compile-only
-
-: ;then ( - )
-  compiler @ 0; drop ` ;; ` then ; compile-only
+: if    ( f- ) TRUE literal, ` =if ; compile-only
+: ;then ( -  ) ` ;; ` then ; compile-only
+: else  ( -  ) 8 , here 0 , swap ` then ; compile-only
 
 : =  ( xy-f )  =if TRUE ;then FALSE ;
 : <> ( xy-f )  !if TRUE ;then FALSE ;

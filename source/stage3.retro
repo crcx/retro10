@@ -64,7 +64,7 @@ stub (ia)
   : row     . dup 64 type 64 + cr ;
   : .rows   0 row 1 row 2 row 3 row
             4 row 5 row 6 row 7 row ;
-  : .block  ." Block: " blk @ . ." of " #-blocks @ . ;
+  : .block  ." Block: " blk @ . ." of " #-blocks @ 1- . ;
   : x       ." +---:---+---:---" ;
   : bar     space space x x x x cr ;
   : vb      bar blk @ block .rows drop bar ;

@@ -25,6 +25,7 @@
 (      # d        Erase the specified line                    )
 (        v        Display the current block                   )
 (        e        Evaluate Block                              )
+(        ea       Evaluate All Blocks                         )
 (        new      Erase all blocks                            )
 ( # set-blocks    Set the # of blocks. Calls 'new'            )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -52,7 +53,7 @@ stub (ia)
 : i   ( n"- ) 0 swap ia v ;
 : new ( -  ) offset @ 32 512 #-blocks @ * fill ;
 : e   ( -  ) (block) 512 eval ;
-
+: ea  ( -  ) offset @ #mem @ over - eval ;
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Default Block Viewer                                        )

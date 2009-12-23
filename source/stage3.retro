@@ -59,8 +59,7 @@ stub (ia)
 ( Default Block Viewer                                        )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {
-  : (type)  for dup @ emit 1+ next ;
-  : type    (type) drop ;
+  : type    for @+ emit next drop ;
   : space   32 emit ;
   : row     . dup 64 type 64 + cr ;
   : .rows   0 row 1 row 2 row 3 row

@@ -11,7 +11,7 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Display a list of all named words                           )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: words ( - ) last @ repeat 0; dup d->name type 32 emit @ again ;
+: words ( - ) last repeat @ 0; dup d->name type 32 emit again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -53,7 +53,7 @@ forget p:
 
 : c: ['] .compiler reclass: ;
 c: =if     c: >if   c: <if     c: !if
-c: then  c: for     c: next    c: [']
+c: then    c: for   c: next    c: [']
 c: pop     c: push  c: 0;      c: again
 c: repeat  c: ;;    c: ;       c: s"
 forget c:
@@ -142,7 +142,6 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( Fill a memory range with a specific value.                  )
 (   Takes an address, a value, and a count.                   )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-
 {{
   variable src
   variable dst
@@ -243,7 +242,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( does>                                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: .does compiler @ if swap literal, compile pop drop ;; then drop ;
+: .does compiler @ if swap literal, compile pop drop ;then drop ;
 : does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ; compile-only
 
 
@@ -254,12 +253,14 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
   variable count
   variable buffer
   : setup  ( an- )  count ! buffer ! ;
-  : -remap ( - )    ['] key :devector ;
+  : -remap ( - )    ['] key :devector ['] emit :devector ;
   : get    ( -c )   buffer @ @ ;
   : next   ( -c )
     count @ 0 =if 32 -remap ;then
     count -- get buffer ++ ;
-  : remap  ( - )   ['] next ['] key :is ;
+  : remap  ( - )
+    ['] drop ['] emit :is
+    ['] next ['] key :is ;
 ---reveal---
   : eval   ( an- ) setup remap ;
 }}

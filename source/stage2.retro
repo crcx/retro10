@@ -170,10 +170,10 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 -1 constant TRUE   ( -f )
  0 constant FALSE  ( -f )
 
-: ahead ( -a ) 8 , here 0 , ; compile-only
-: if    ( f- ) FALSE literal, ` !if ; compile-only
-: ;then ( -  ) ` ;; ` then ; compile-only
-: else  ( -  ) ` ahead swap ` then ; compile-only
+: ahead (  -a ) 8 , here 0 , ; compile-only
+: if    ( f-  ) FALSE literal, ` !if ; compile-only
+: ;then ( a-  ) ` ;; ` then ; compile-only
+: else  ( a-a ) ` ahead swap ` then ; compile-only
 
 : =  ( xy-f )  =if TRUE ;then FALSE ;
 : <> ( xy-f )  !if TRUE ;then FALSE ;
@@ -245,17 +245,18 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 {{
   variable count
   variable buffer
-  : setup  ( an- )  count ! buffer ! ;
-  : -remap ( - )    ['] key :devector ['] emit :devector ;
-  : get    ( -c )   buffer @ @ ;
-  : next   ( -c )
-    count @ 0 =if 32 -remap ;then
+  : restore ( -   )
+    ['] key  :devector
+    ['] emit :devector ok ;
+  : get     ( -c  )  buffer @ @ ;
+  : next    ( -c  )
+    count @ 0 =if 32 restore ;then
     count -- get buffer ++ ;
-  : remap  ( - )
+  : replace ( -   )
     ['] drop ['] emit :is
-    ['] next ['] key :is ;
+    ['] next ['] key  :is ;
 ---reveal---
-  : eval   ( an- ) setup remap ;
+  : eval    ( an- ) count ! buffer ! replace ;
 }}
 
 

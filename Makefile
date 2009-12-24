@@ -13,6 +13,9 @@ stage2:
 stage3:
 	$(VM) --with source/stage3.retro >>build.log
 
+shrink:
+	echo "save bye" | $(VM) --shrink
+
 errors:
 	cat build.log | grep -v ok
 

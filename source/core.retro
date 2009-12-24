@@ -295,13 +295,13 @@ variable fb     ( canvas present?    )
 variable fw     ( framebuffer width  )
 variable fh     ( framebuffer height )
 
-t: boot ( - )
-  copytag # type cr ;
-t: run-on-boot ( - )
-  -1 # 5 # out, wait 5 # in, #mem # !,  ( Memory Size )
-  -2 # 5 # out, wait 5 # in, fb # !,    ( Canvas Present? )
-  -3 # 5 # out, wait 5 # in, fw # !,    ( Canvas Width )
-  -4 # 5 # out, wait 5 # in, fh # !,    ( Canvas Height )
+t: boot         ( -   ) copytag # type cr ;
+t: capability:  ( n-n ) 5 # out, wait, 5 # in, ;
+t: run-on-boot  ( -   )
+  -1 # capability: #mem # !,  ( Memory Size )
+  -2 # capability: fb #   !,  ( Canvas Present? )
+  -3 # capability: fw #   !,  ( Canvas Width )
+  -4 # capability: fh #   !,  ( Canvas Height )
   boot ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: with-class   ( ac- ) execute ;

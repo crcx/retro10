@@ -108,7 +108,7 @@ stub (ia)
   : token     ( "-  ) 32 accept tib keepString literal, ;
   : .op       ( a-  ) dup getLength swap type 6 swap - 0; for 32 emit next ;
   : .symbol   ( "-  ) token ` .op ` drop ; immediate
-  : .value    (  -  ) addr ++ addr @ @ . pad resolve ;
+  : .value    (  -  ) addr ++ addr @ @ . pad resolve drop ;
   : sym:      ( "-  ) ` over ` =if ` .symbol ` ;then ; immediate
   : sym+:     ( "-  ) ` over ` =if ` .symbol ` .value ` ;then ; immediate
 

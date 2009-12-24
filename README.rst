@@ -1,5 +1,9 @@
+=====
 RETRO
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=====
+
+Welcome!
+--------
 This is a small dialect of Forth. It's minimalistic in nature
 and is designed to be fairly easy to learn and customize for
 specific needs.
@@ -13,4 +17,3 @@ VM to build this. Modify the VM line in the Makefile to point
 to your VM.
 
 The latest docmentation can be found in the 'doc' directory.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

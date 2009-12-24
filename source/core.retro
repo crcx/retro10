@@ -321,9 +321,6 @@ t: ok      ( - )
 t: listen  ( - )
   repeat ok 32 # accept search word? number? again ;
 
-main:
-  run-on-boot listen ;
-
 ' 1+           word: 1+            ' 1-           word: 1-
 ' swap         word: swap          ' drop         word: drop
 ' and          word: and           ' or           word: or
@@ -382,6 +379,8 @@ main:
   fh           data: fh            #mem         data: #mem
   heap         data: heap          which        data: which
   whitespace   data: whitespace    base         data: base
+
+main: run-on-boot listen ;
 
 patch-dictionary
 boot-new

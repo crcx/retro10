@@ -63,7 +63,7 @@ forget c:
 ( Make the most recently created word execute into a compiler )
 ( macro.                                                      )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: immediate ['] .macro reclass ;
+: immediate ( - ) ['] .macro reclass ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -178,9 +178,10 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 -1 constant TRUE   ( -f )
  0 constant FALSE  ( -f )
 
+: ahead ( -a ) 8 , here 0 , ; compile-only
 : if    ( f- ) FALSE literal, ` !if ; compile-only
 : ;then ( -  ) ` ;; ` then ; compile-only
-: else  ( -  ) 8 , here 0 , swap ` then ; compile-only
+: else  ( -  ) ` ahead swap ` then ; compile-only
 
 : =  ( xy-f )  =if TRUE ;then FALSE ;
 : <> ( xy-f )  !if TRUE ;then FALSE ;

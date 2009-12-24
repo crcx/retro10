@@ -142,16 +142,8 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( Fill a memory range with a specific value.                  )
 (   Takes an address, a value, and a count.                   )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-{{
-  variable src
-  variable dst
-  variable val
-  : (copy) for src @ @ dst @ ! src ++ dst ++ next ;
-  : (fill) for val @ dst @ ! dst ++ next ;
-  ---reveal---
-  : copy ( aan- ) push dst ! src ! pop (copy) ;
-  : fill ( ann- ) push val ! dst ! pop (fill) ;
-}}
+: copy ( aan- ) for push @+ pop !+ next 2drop ;
+: fill ( ann- ) swap here ! for here @ swap !+ next drop ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

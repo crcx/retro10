@@ -39,8 +39,8 @@
 p: 1+     p: 1-     p: swap   p: drop
 p: and    p: or     p: xor    p: @
 p: !      p: +      p: -      p: *
-p: /mod   p: <<     p: >>     p: nip
-p: dup    p: in     p: out
+p: /mod   p: <<     p: >>     p: dup
+p: in     p: out
 forget p:
 
 

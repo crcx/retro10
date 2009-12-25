@@ -264,11 +264,15 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( Conditionally execute code if a word exists                 )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
-  : cut ( a-a ) dup getLength over + 1- dup @ 32 =if 0 swap ! ;then drop ;
-  : | ( "-a ) char: | accept tib cut ;
+  : cut ( a-a )
+    dup getLength over + 1-
+    dup @ 32 =if 0 swap ! else drop then ;
+  : "cut ( c"-a ) accept tib tempString cut ;
+  : { ( "-a ) char: { "cut ;
+  : } ( "-a ) char: } "cut ;
 ---reveal---
   : ifExists ( "- )
-    | find nip | swap if dup getLength eval ;then drop ;
+    { find nip } swap if dup getLength eval ;then drop ;
 }}
 
 save

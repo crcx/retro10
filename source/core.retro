@@ -71,7 +71,7 @@ t: literal, ( n-  )  1 # t-, t-, ;
 t: t-for    ( R: n-   C: -a )
   t-here 5 # t-, ;
 t: t-next   ( R: -    C: a- )
-  6 # t-, 27 # t-, 2 # t-, 1 # t-, 0 # t-, 12 # t-, t-, 3 # t-, ;
+  6 # t-, 27 # t-, 2 # t-, 0 # literal, 12 # t-, t-, 3 # t-, ;
 t: (if)     ( -a )
   t-here 0 # t-, ;
 t: t-=if    ( R: xy-  C: -a )
@@ -95,7 +95,7 @@ t: .word   ( a- )
 t: .macro  ( a- )
    execute ;
 t: .data   ( a- )
-   compiler # @, -1 # =if 1 # t-, t-, then ;
+   compiler # @, -1 # =if literal, then ;
 
 ' .word 'WORD set-class
 ' .macro 'MACRO set-class
@@ -151,7 +151,7 @@ t: accept ( c- )
 t: d->class ( a-a )  1+, ;
 t: d->xt    ( a-a )  1+, 1+, ;
 t: d->name  ( a-a )  1+, 1+, 1+, ;
-t: create   ( "-  )   t-here             ( Entry Start )
+t: create   ( "-  )  t-here              ( Entry Start )
                      last # @, t-,       ( Link to previous )
                      last # !,           ( Set as newest )
                      ' .data # t-,       ( Class = .data )
@@ -204,7 +204,7 @@ t: keepString  ( a-a )
 t: t-"  ( "-a )
   char: " # accept TIB # tempString ;
 t: t-s" ( R: -a  C: "- )
-  t-" keepString 1 # t-, t-, ;
+  t-" keepString literal, ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable #value        variable num
 variable #ok           variable negate?
@@ -274,7 +274,7 @@ t: t-'    ( "-a )
   found # @, -1 # =if which # @, d->xt @, ; then 0 #
   found # on ;
 t: t-[']  ( R: -a   C: "- )
-  1 # t-, t-' t-, ;
+  t-' literal, ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: :devector ( a-  )  dup, 0 # swap, !, 1+, 0 # swap, !, ;
 t: :is       ( aa- )  dup, 8 # swap, !, 1+, !, ;

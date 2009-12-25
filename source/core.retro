@@ -184,14 +184,12 @@ t: (strlen)  ( a-na )
 t: getLength ( $-n )
   0 # swap, (strlen) drop, ;
 
-variable SAFE
-
-t: (reset-$)  SCRATCH-START # SAFE # !, ;
-t: (next)     1 # SAFE # +! ;
-t: (save)     repeat @+ 0; SAFE # @, !, (next) again ;
+t: (reset-$)  SCRATCH-START # flag # !, ;
+t: (next)     1 # flag # +! ;
+t: (save)     repeat @+ 0; flag # @, !, (next) again ;
 
 t: tempString  ( a-a )
-  (reset-$) (save) drop, 0 # SAFE # @, !, SCRATCH-START # ;
+  (reset-$) (save) drop, 0 # flag # @, !, SCRATCH-START # ;
 
 t: (save) dup, getLength repeat 0; push, @+ t-, pop, 1-, again ;
 

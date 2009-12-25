@@ -84,7 +84,7 @@ stub (ia)
 }
 
 : set-blocks
-  #-blocks ! #mem @ 512 #-blocks @ * - offset ! new ;
+  #-blocks ! #mem @ 512 #-blocks @ * - offset ! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

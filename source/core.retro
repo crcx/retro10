@@ -168,7 +168,7 @@ t: next-set ( ab-cd )  1+, swap, 1+, swap, ;
 
 t: (skim)
   repeat
-    2dup @, swap, @, +, 0; drop,
+    2dup get-set +, 0; drop,
     2dup get-set n=n next-set
     flag # @, 0; drop,
   again

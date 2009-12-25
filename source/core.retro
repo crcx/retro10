@@ -58,8 +58,8 @@ t: -! ( na-  )  dup, push, @, swap, -, pop, !, ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: t-here   ( -a  )  heap # @, ;
 t: t-,      ( n-  )  t-here !, t-here 1+, heap # !, ;
-t: t-]      ( -   )  -1 # compiler # !, ;
-t: t-[      ( -   )  0 # compiler # !, ;
+t: t-]      ( -   )  compiler # on ;
+t: t-[      ( -   )  compiler # off ;
 t: t-;;     ( -   )  9 # t-, ;
 t: t-;      ( -   )  t-;; t-[ ;
 t: ($,)     ( a-a )  repeat dup, @, 0; t-, 1+, again ;
@@ -162,7 +162,7 @@ t: (:)        ( -   )  last # @, d->class !, t-] 0 # t-, 0 # t-, ;
 t: :          ( "-  )  create ' .word # (:) ;
 t: t-(        ( "-  )  char: ) # accept ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-t: n=n      ( xy-   )  !if 0 # flag # !, then ;
+t: n=n      ( xy-   )  !if flag # off then ;
 t: get-set  ( ab-xy )  @, swap, @, ;
 t: next-set ( ab-cd )  1+, swap, 1+, swap, ;
 
@@ -175,8 +175,7 @@ t: (skim)
 ;
 
 t: compare   ( $$-f )
-  -1 # flag # !,
-  (skim) 2drop flag # @, ;
+  flag # on (skim) 2drop flag # @, ;
 
 t: (strlen)  ( a-na )
   repeat dup, @, 0; drop, next-set again ;
@@ -213,7 +212,7 @@ label: nums " 0123456789ABCDEF" $,
 label: base 10 m,
 
 t: digits
-  repeat dup, push, nums # +, @, over =if -1 # num # !, then pop, 0; 1-, again ;
+  repeat dup, push, nums # +, @, over =if num # on then pop, 0; 1-, again ;
 t: (digit)
   base # @, 10 # =if 10 # digits ; then
   base # @, 16 # =if 16 # digits ; then
@@ -221,7 +220,7 @@ t: (digit)
   base # @,  2 # =if  2 # digits ; then
 ;
 t: digit?
-  0 # num # !, (digit) drop, num # @, ;
+  num # off (digit) drop, num # @, ;
 
 t: char>digit ( c-n )
   char: 0 # -,

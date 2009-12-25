@@ -260,5 +260,13 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 }}
 
 
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Execute line if word exists; ignore line if word is not     )
+( defined.                                                    )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: ifExists ( "- )
+  32 accept tib find nip not 0; whitespace dup off @ 10 accept whitespace ! ;
+
+
 save
 bye

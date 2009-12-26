@@ -275,5 +275,13 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
     { find nip } swap if dup getLength eval ;then drop ;
 }}
 
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( fori / nexti                                                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: fori ( n- ) ` dup ` push ` for ` pop ` pop ` 2dup
+              ` push ` push ` swap ` - ; compile-only
+: nexti ( - ) ` next ` pop ` drop ; compile-only
+
 save
 bye

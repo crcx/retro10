@@ -245,16 +245,12 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 {{
   variable count
   variable buffer
-  : restore ( -   )
-    ['] key  :devector
-    ['] emit :devector ok ;
+  : restore ( -   )  ['] ekey :devector ok ;
   : get     ( -c  )  buffer @ @ ;
   : next    ( -c  )
     count @ 0 =if 32 restore ;then
     count -- get buffer ++ ;
-  : replace ( -   )
-    ['] drop ['] emit :is
-    ['] next ['] key  :is ;
+  : replace ( -   )  ['] next ['] ekey :is ;
 ---reveal---
   : eval    ( an- ) count ! buffer ! replace ;
 }}

@@ -109,7 +109,6 @@ t: clear  ( -  ) -1 # emit ;
 t: (type) ( a-a ) repeat @+ 0; emit again ;
 t: type   ( a-  ) update # off (type) drop, update # on redraw ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-variable >in             ( Offset into the TIB                )
 variable break-char      ( Holds the delimiter for 'accept'   )
 -1 variable: whitespace  ( Allow extended whitespace          )
 
@@ -129,24 +128,27 @@ t: key ( -c )
   again
 ;
 
-t: >tib ( c- )  TIB # >in # @, +, !, 1 # >in # +! ;
+t: ekey ( -c ) key dup, emit ;
+
+variable accept:tib
+t: >tib ( c- ) accept:tib # @, !+ accept:tib # !, ;
 
 t: eat-leading ( - )
   repeat
-    key dup, emit dup,
+    ekey dup,
     break-char # @, !if >tib ; then drop,
   again ;
 
 t: (accept) ( -c )
   repeat
-    key dup, emit dup,
+    ekey dup,
     break-char # @, =if drop, ; then
-    dup, 8 # =if 1 # >in # -! drop, 8 m, ' (accept) m, then
+    dup, 8 # =if 1 # accept:tib # -! drop, 8 m, ' (accept) m, then
     >tib
   again ;
 
 t: accept ( c- )
-  break-char # !, 0 # >in # !, eat-leading (accept) 0 # >tib ;
+  break-char # !, TIB # accept:tib # !, eat-leading (accept) 0 # >tib ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: d->class ( a-a )  1+, ;
 t: d->xt    ( a-a )  1+, 1+, ;
@@ -358,7 +360,7 @@ t: listen  ( - )
 ' notfound     word: notfound      ' save         word: save
 ' >number      word: >number       ' ok           word: ok
 ' listen       word: listen        ' isnumber?    word: isNumber?
-' key          word: key
+' key          word: key           ' ekey         word: ekey
 
 ' t-s"         macro: s"        ' t-[          macro: [
 ' t-;          macro: ;         ' t-;;         macro: ;;

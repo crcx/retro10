@@ -3,6 +3,18 @@
 ( License: ISC                                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Use this before drawing a large amount of text; it'll delay )
+( all video updates until the caller exits                    )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  : fast ( - ) ;
+---reveal---
+  : fast-render ( - ) ['] fast ['] redraw :is later ['] redraw :devector ;
+}}
+
+
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( This is a block editor that I've been using for many years. )
 ( It's simple, and doesn't have a lot of features, but it is  )
@@ -66,7 +78,7 @@ stub (ia)
   : x       ." +---:---+---:---" ;
   : bar     space space x x x x cr ;
   : vb      bar blk @ block rows drop bar ;
-  here is (v) ] clear vb .block ;
+  here is (v) ] clear fast-render vb .block ;
 }
 
 

@@ -11,8 +11,16 @@
 {{
   : fast ( - ) ;
 ---reveal---
-  : fast-render ( - ) ['] fast ['] redraw :is later ['] redraw :devector redraw ;
+  : fast-render ( - )
+    ['] fast ['] redraw :is later ['] redraw :devector redraw ;
 }}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Display a list of all named words                           )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: words ( - )
+  fast-render last repeat @ 0; dup d->name type 32 emit again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -141,7 +149,8 @@ stub (ia)
   : vector? addr @ @ 0 =if addr @ 1+ @ 0 =if pop pop 2drop then then ;
   : more? header? vector? ;
 ---reveal---
-  : see  ( "-  ) ' addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
+  : see  ( "-  )
+    fast-render ' addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
 }}
 
 save

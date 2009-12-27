@@ -269,6 +269,8 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ---reveal---
   : ifExists ( "- )
     { find nip } swap if dup getLength eval ;then drop ;
+  : ifNotExists ( "- )
+    { find not nip } swap if dup getLength eval ;then drop ;
 }}
 
 

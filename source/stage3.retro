@@ -11,7 +11,7 @@
 {{
   : fast ( - ) ;
 ---reveal---
-  : fast-render ( - ) ['] fast ['] redraw :is later ['] redraw :devector ;
+  : fast-render ( - ) ['] fast ['] redraw :is later ['] redraw :devector redraw ;
 }}
 
 

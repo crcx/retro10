@@ -150,7 +150,7 @@ stub (ia)
   : more? header? vector? ;
 ---reveal---
   : see  ( "-  )
-    ' fast-render addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
+    ' addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
 }}
 
 save

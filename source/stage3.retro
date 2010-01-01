@@ -130,7 +130,7 @@ stub (ia)
   : sym:      ( "-  ) ` over ` =if ` .symbol ` ;then ; immediate
   : sym+:     ( "-  ) ` over ` =if ` .symbol ` .value ` ;then ; immediate
 
-  : .ascii    ( c-  ) dup 32 128 within if 39 emit emit 39 emit then ;
+  : .ascii    ( c-  ) dup 32 128 within if 39 emit emit 39 emit else drop then ;
 
   : decompile ( -   )
     addr @ @

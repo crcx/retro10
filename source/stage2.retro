@@ -262,9 +262,9 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
   : { ( "-a ) char: { "cut ;
   : } ( "-a ) char: } "cut ;
 ---reveal---
-  : ifExists ( "- )
+  : ifDefined ( "- )
     { find nip } swap if dup getLength eval ;then drop ;
-  : ifNotExists ( "- )
+  : ifNotDefined ( "- )
     { find not nip } swap if dup getLength eval ;then drop ;
 }}
 

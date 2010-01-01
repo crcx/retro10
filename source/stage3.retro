@@ -147,7 +147,8 @@ stub (ia)
 
   : header? addr @ @ 9 =if addr @ 1+ @ 30 >if addr @ . decompile pop pop 2drop then then ;
   : vector? addr @ @ 0 =if addr @ 1+ @ 0 =if pop pop 2drop then then ;
-  : more? header? vector? ;
+  : here?   addr @ @ here =if pop pop 2drop then ;
+  : more? header? vector? here? ;
 ---reveal---
   : see  ( "-  )
     ' addr ! cr repeat addr @ . decompile cr addr ++ more? again ;

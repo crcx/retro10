@@ -11,7 +11,7 @@
 {{
   : fast ( - ) ;
 ---reveal---
-  : fast-render ( - )
+  : fastRender ( - )
     ['] fast ['] redraw :is later ['] redraw :devector redraw ;
 }}
 
@@ -20,7 +20,7 @@
 ( Display a list of all named words                           )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : words ( - )
-  fast-render last repeat @ 0; dup d->name type 32 emit again ;
+  fastRender last repeat @ 0; dup d->name type 32 emit again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -86,7 +86,7 @@ stub (ia)
   : x       ." +---:---+---:---" ;
   : bar     space space x x x x cr ;
   : vb      bar blk @ block rows drop bar ;
-  here is (v) ] clear fast-render vb .block ;
+  here is (v) ] clear fastRender vb .block ;
 }
 
 

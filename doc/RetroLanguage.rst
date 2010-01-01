@@ -911,8 +911,6 @@ List of Words by Class
 | Parse until ) is encounterd, ignoring everything. This is|
 | used for comments.                                       |
 +--------------+--------------+------------+---------------+
-| Holds Y coordinate for text output (framebuffer only)    |
-+--------------+--------------+------------+---------------+
 | last         | .data        | -a         |               |
 +--------------+--------------+------------+---------------+
 | Holds the address of the most recent dictionary header   |

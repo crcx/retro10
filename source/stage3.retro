@@ -117,7 +117,7 @@ stub (ia)
 {{
   variable addr
 
-  : pad       ( -    ) addr @ @ 6 for dup base @ r pow <if 32 emit then next ;
+  : pad       ( -   ) addr @ @ 6 for dup base @ r pow <if 32 emit then next ;
 
   : .wrap     ( -   ) ." ( " later ."  )" ;
   : .name     ( a-  ) .wrap d->name type ;

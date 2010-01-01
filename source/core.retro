@@ -51,8 +51,8 @@ t: mod   ( xy-r   )  /mod, drop, ;
 t: neg   ( x-y    )  -1 # *, ;
 t: execute ( a-   )  1-, push, ;
 t: later ( - )  pop, pop, swap, push, push, ;
-t: @+ ( a-an )  dup, 1+, swap, @, ;
-t: !+ ( na-a )  dup, 1+, push, !, pop, ;
+t: @+ ( a-ac )  dup, 1+, swap, @, ;
+t: !+ ( ca-a )  dup, 1+, push, !, pop, ;
 t: +! ( na-  )  dup, push, @, +, pop, !, ;
 t: -! ( na-  )  dup, push, @, swap, -, pop, !, ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

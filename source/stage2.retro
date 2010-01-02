@@ -119,7 +119,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( useful for arrays and similar things.                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : allot  ( n- )  heap +! ;
-: zallot ( n- )  repeat 0; 1- 0 , again ;
+: zallot ( n- )  dup 0 <if allot ;; then repeat 0; 1- 0 , again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

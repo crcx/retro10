@@ -22,13 +22,14 @@ Requirements for Building
 How to Build
 ------------
 
-- Open "Makefile" in a text editor
+- Open *Makefile* in a text editor
 
-- Alter the VM = line to point to your Ngaro ("retro")
+- Alter the **VM =** line to point to your Ngaro (*retro*)
   binary.
 
-- "make"
+- *make*
 
 More Information
 ----------------
-The full docmentation can be found in the 'doc' directory.
+Documentation, notes, and commentary on specific pieces of
+code can be found in the *doc* directory.

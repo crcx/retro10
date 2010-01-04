@@ -257,7 +257,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 {{
   : defined    ( "-f ) 32 accept tib find nip ;
   : evalTib    ( -   ) tib dup getLength eval ;
-  : block      ( "-  ) key char: { =if char: { emit char: } accept ;
+  : block      ( "-  ) key char: { =if char: { emit char: } accept else ." Invalid Syntax" cr then ;
   : evalBlock  ( "-  ) block evalTib ;
   : ifBlock    ( f"- ) if evalBlock ;then block ;
 ---reveal---

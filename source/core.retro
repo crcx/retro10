@@ -164,20 +164,11 @@ t: (:)        ( -   )  last # @, d->class !, t-] 0 # t-, 0 # t-, ;
 t: :          ( "-  )  create ' .word # (:) ;
 t: t-(        ( "-  )  char: ) # accept ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-t: n=n      ( xy-   )  !if flag # off then ;
 t: get-set  ( ab-xy )  @, swap, @, ;
 t: next-set ( ab-cd )  1+, swap, 1+, swap, ;
 
-t: (skim)
-  repeat
-    2dup get-set +, 0; drop,
-    2dup get-set n=n next-set
-    flag # @, 0; drop,
-  again
-;
-
-t: compare   ( $$-f )
-  flag # on (skim) 2drop flag # @, ;
+t: compare ( $$-f )
+   repeat 2dup get-set 2dup !if 2drop 2drop 0 # ; then +, 0 # =if 2drop -1 # ; then next-set again ;
 
 t: (strlen)  ( a-na )
   repeat dup, @, 0; drop, next-set again ;

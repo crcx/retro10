@@ -197,9 +197,8 @@ t: (save) dup, getLength repeat 0; push, @+ t-, pop, 1-, again ;
 t: keepString  ( a-a )
   dup, getLength 1+, 1+, 1+, t-here +,
   8 # t-, t-,
-  t-here push,
+  t-here swap,
   (save) drop, 0 # t-,
-  pop,
 ;
 
 t: t-"  ( "-a )

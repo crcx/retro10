@@ -167,8 +167,14 @@ t: t-(        ( "-  )  char: ) # accept ;
 t: get-set  ( ab-xy )  @, swap, @, ;
 t: next-set ( ab-cd )  1+, swap, 1+, ;
 
-t: compare ( $$-f )
-   repeat 2dup get-set 2dup !if 2drop 2drop 0 # ; then +, 0 # =if 2drop -1 # ; then next-set again ;
+t: compare  ( $$-f )
+   repeat
+     2dup get-set
+     2dup !if 2drop 2drop 0 # ; then
+     +, 0 # =if 2drop -1 # ; then
+     next-set
+   again
+;
 
 t: (strlen)  ( a-na )
   repeat dup, @, 0; drop, next-set swap, again ;

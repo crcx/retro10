@@ -848,12 +848,12 @@ List of Words by Class
 | >if          | .macro       | C: -a      |               |
 |              |              | R: nn-     |               |
 +--------------+--------------+------------+---------------+
-| Compare two numbers for greater than                     |
+| Compare two numbers for greater than or equal to         |
 +--------------+--------------+------------+---------------+
 | <if          | .macro       | C: -a      |               |
 |              |              | R: nn-     |               |
 +--------------+--------------+------------+---------------+
-| Compare two numbers for less than                        |
+| Compare two numbers for less than or equal to            |
 +--------------+--------------+------------+---------------+
 | !if          | .macro       | C: -a      |               |
 |              |              | R: nn-     |               |

@@ -389,7 +389,7 @@ t: listen  ( - )
   heap         data: heap          which        data: which
   whitespace   data: whitespace    base         data: base
 
-main: run-on-boot listen ;
+main: run-on-boot jump, ' listen m,
 
 patch-dictionary
 boot-new

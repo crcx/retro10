@@ -164,20 +164,34 @@ t: (:)        ( -   )  last # @, d->class !, t-] 0 # t-, 0 # t-, ;
 t: :          ( "-  )  create ' .word # (:) ;
 t: t-(        ( "-  )  char: ) # accept ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-t: get-set  ( ab-xy )  @, swap, @, ;
-t: next-set ( ab-cd )  1+, swap, 1+, ;
+( A more readable "compare":
+
+  t: get-set  [ ab-xy ]  @, swap, @, ;
+  t: next-set [ ab-cd ]  1+, swap, 1+, ;
+  t: compare  [ $$-f  ]
+     repeat
+       2dup get-set
+       2dup !if 2drop 2drop 0 # ; then
+       +, 0 # =if 2drop -1 # ; then
+       next-set
+     again
+  ;
+
+  We use the less readable one below for performance
+  reasons.
+)
 
 t: compare  ( $$-f )
    repeat
-     2dup get-set
-     2dup !if 2drop 2drop 0 # ; then
-     +, 0 # =if 2drop -1 # ; then
-     next-set
-   again
+     dup, @, push, 1+, swap,
+     dup, @, push, 1+, pop, dup, pop, swap,
+     !if drop, drop, dup, xor, ; then
+   0 # 12 m, m,
+   drop, drop, -1 #
 ;
 
 t: (strlen)  ( a-na )
-  repeat dup, @, 0; drop, next-set swap, again ;
+  repeat dup, @, 0; drop, 1+, swap, 1+, swap, again ;
 
 t: getLength ( $-n )
   0 # swap, (strlen) drop, ;

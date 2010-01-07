@@ -94,6 +94,9 @@ jump, 0 m,
 ( the new image over the old one. Since we can't use *any*    )
 ( code that calls into the old image, we must redefine all    )
 ( words necessary here.                                       )
+(                                                             )
+( If you're not targeting a different VM, use "store-and-quit")
+( instead of "boot-new"                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
   2 vars src dst
@@ -106,6 +109,8 @@ jump, 0 m,
   : save ( - )    1 4 [ 29 , ] 0 0 [ 29 , 30 , 99 , ] ;
 ---reveal---
   : boot-new
+    origin @ 0 IMAGE-SIZE copy [ 8 , 0 , ] ;
+  : store-and-quit
     origin @ 0 IMAGE-SIZE copy save ;
 }}
 

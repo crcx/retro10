@@ -153,6 +153,3 @@ stub (ia)
   : see  ( "-  )
     ' addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
 }}
-
-save
-bye

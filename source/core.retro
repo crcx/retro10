@@ -20,7 +20,7 @@ variable compiler  ( Is the compiler on or off?               )
 variable flag      ( Shared variable used by some primitives  )
                    ( It's used as a flag, a counter, etc.     )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-label: copytag   " RETRO 10" $,
+label: copytag   " RETRO" $,
 label: nomatch   " Word Not Found" $,
 label: okmsg     " ok " $,
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

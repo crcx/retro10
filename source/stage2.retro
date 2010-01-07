@@ -273,5 +273,3 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
               ` push ` push ` swap ` - ; compile-only
 : nexti ( - ) ` next ` pop ` drop ; compile-only
 
-save
-bye

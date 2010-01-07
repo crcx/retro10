@@ -114,10 +114,11 @@ variable break-char      ( Holds the delimiter for 'accept'   )
 
 t: (remap-keys) ( c-c ) ;
 t: ws ( c-c )
-  dup, 13 # =if drop, 10 # then
+  dup, 127 # =if drop,  8 # then
+  dup,  13 # =if drop, 10 # then
   whitespace # @, 0; drop,
-  dup,  9 # =if drop, 32 # ; then
-  dup, 10 # =if drop, 32 # ; then
+  dup,   9 # =if drop, 32 # then
+  dup,  10 # =if drop, 32 # then
 ;
 
 t: key ( -c )

@@ -33,3 +33,12 @@ Then, at the shell:
   dd if=blocks of=retroImage ibs=4 bs=4 seek=#
 
 Again, **#** is the number displayed by Retro.
+
+
+==================
+Converting to Text
+==================
+
+::
+
+  tr -d '\000' <blocks | fold -w 64 >readable.txt

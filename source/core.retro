@@ -5,13 +5,12 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 3072 constant SCRATCH
 3584 constant TIB
-4096 constant HEAP-START
+4096 constant HEAP
 5000000 constant MAX-IMAGE
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 mark-dictionary    ( Pointer to the most recent dictionary    )
 variable last      ( header                                   )
-HEAP-START
-variable: heap     ( Starting address of the data/code heap   )
+HEAP variable: heap ( Starting address of the data/code heap  )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable which     ( Pointer to dictionary header of the most )
                    ( recently looked up word                  )
@@ -91,11 +90,11 @@ t: t-again  ( R: -    C: a- )
 t: t-0;     ( n-n || n -  )  25 # t-, ;
 
 t: .word   ( a- )
-   compiler # @, -1 # =if 7 # t-, t-, ; then execute ;
+   compiler # @, -1 # =if 7 # t-, t-, ; then jump: execute
 t: .macro  ( a- )
-   execute ;
+   jump: execute
 t: .data   ( a- )
-   compiler # @, -1 # =if literal, then ;
+   compiler # @, 0; drop, literal, ;
 
 ' .word  'WORD  set-class
 ' .macro 'MACRO set-class
@@ -199,15 +198,14 @@ t: getLength ( $-n )
 
 t: tempString ( a-a  )
    heap # @, swap, SCRATCH # heap # !,
-   $ drop,
-   heap # !, SCRATCH #
+   $ heap # !, SCRATCH #
 ;
 
 t: keepString  ( a-a )
   dup, getLength 1+, 1+, 1+, t-here +,
   8 # t-, t-,
   t-here swap,
-  $ drop, 0 # t-,
+  $ 0 # t-,
 ;
 
 t: t-"  ( "-a )
@@ -311,7 +309,7 @@ t: run-on-boot  ( -   )
   -4 # capability: fh #   !,  ( Canvas Height )
   boot ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-t: with-class   ( ac- ) execute ;
+t: with-class   ( ac- ) jump: execute
 t: notfound     ( -   ) cr nomatch # type cr ;
 t: the->xt      ( a-n ) which # @, d->xt @, ;
 t: the->class   ( a-n ) which # @, d->class @, ;
@@ -319,10 +317,10 @@ t: tib->number? ( -f  ) TIB # isnumber? ;
 t: tib->number  ( -n  ) TIB # >number .data ;
 
 t: word?   ( - )
-  found # @, -1 # =if the->xt the->class with-class then ;
+  found # @, 0; drop, the->xt the->class with-class ;
 t: number? ( - )
-  found # @, 0 # =if tib->number? -1 # =if tib->number ; then
-  notfound then ;
+  found # @, not 0; drop,
+  tib->number? -1 # =if tib->number ; then notfound ;
 t: ok      ( - )
   compiler # @, 0 # =if cr okmsg # type then ;
 t: listen  ( - )

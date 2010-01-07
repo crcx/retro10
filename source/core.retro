@@ -3,7 +3,7 @@
 ( Copyright [c] 2009, Charles Childers                        )
 ( License: ISC                                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-3072 constant SCRATCH-START
+3072 constant SCRATCH
 3584 constant TIB
 4096 constant HEAP-START
 5000000 constant MAX-IMAGE
@@ -62,7 +62,7 @@ t: t-]      ( -   )  compiler # on ;
 t: t-[      ( -   )  compiler # off ;
 t: t-;;     ( -   )  9 # t-, ;
 t: t-;      ( -   )  t-;; t-[ ;
-t: ($,)     ( a-a )  repeat dup, @, 0; t-, 1+, again ;
+t: ($,)     ( a-a )  repeat @+ 0; t-, again ;
 t: $        ( a-  )  ($,) drop, 0 # t-, ;
 t: t-push   ( n-  )  5 # t-, ;
 t: t-pop    ( -n  )  6 # t-, ;
@@ -197,20 +197,17 @@ t: (strlen)  ( a-na )
 t: getLength ( $-n )
   0 # swap, (strlen) drop, ;
 
-t: (reset-$)  SCRATCH-START # flag # !, ;
-t: (next)     1 # flag # +! ;
-t: (save)     repeat @+ 0; flag # @, !, (next) again ;
-
-t: tempString  ( a-a )
-  (reset-$) (save) drop, 0 # flag # @, !, SCRATCH-START # ;
-
-t: (save) dup, getLength repeat 0; push, @+ t-, pop, 1-, again ;
+t: tempString ( a-a  )
+   heap # @, swap, SCRATCH # heap # !,
+   $ drop,
+   heap # !, SCRATCH #
+;
 
 t: keepString  ( a-a )
   dup, getLength 1+, 1+, 1+, t-here +,
   8 # t-, t-,
   t-here swap,
-  (save) drop, 0 # t-,
+  $ drop, 0 # t-,
 ;
 
 t: t-"  ( "-a )

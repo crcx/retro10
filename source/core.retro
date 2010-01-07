@@ -73,15 +73,15 @@ t: t-for    ( R: n-   C: -a )
 t: t-next   ( R: -    C: a- )
   6 # t-, 27 # t-, 2 # t-, 0 # literal, 12 # t-, t-, 3 # t-, ;
 t: (if)     ( -a )
-  t-here 0 # t-, ;
+  t-, t-here 0 # t-, ;
 t: t-=if    ( R: xy-  C: -a )
-  12 # t-, (if) ;
+  12 # jump: (if)
 t: t->if    ( R: xy-  C: -a )
-  11 # t-, (if) ;
+  11 # jump: (if)
 t: t-<if    ( R: xy-  C: -a )
-  10 # t-, (if) ;
+  10 # jump: (if)
 t: t-!if    ( R: xy-  C: -a )
-  13 # t-, (if) ;
+  13 # jump: (if)
 t: t-then   ( R: -    C: a- )
   t-here swap, !, ;
 t: t-repeat ( R: -    C: -a )
@@ -97,9 +97,9 @@ t: .macro  ( a- )
 t: .data   ( a- )
    compiler # @, -1 # =if literal, then ;
 
-' .word 'WORD set-class
+' .word  'WORD  set-class
 ' .macro 'MACRO set-class
-' .data 'DATA set-class
+' .data  'DATA  set-class
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 -1 variable: update
 t: redraw ( -  ) update # @, 0; drop, 0 # 3 # out, ;
@@ -143,7 +143,7 @@ t: (accept) ( -c )
   repeat
     ekey dup,
     break-char # @, =if drop, ; then
-    dup, 8 # =if 1 # accept:tib # -! drop, 8 m, ' (accept) m, then
+    dup, 8 # =if 1 # accept:tib # -! drop, jump: (accept) then
     >tib
   again ;
 
@@ -389,7 +389,7 @@ t: listen  ( - )
   heap         data: heap          which        data: which
   whitespace   data: whitespace    base         data: base
 
-main: run-on-boot jump, ' listen m,
+main: run-on-boot jump: listen
 
 patch-dictionary
 boot-new

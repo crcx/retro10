@@ -184,7 +184,7 @@ t: t-(        ( "-  )  char: ) # accept ;
 t: compare  ( $$-f )
    repeat
      dup, @, push, 1+, swap,
-     dup, @, push, 1+, pop, dup, pop, swap,
+     dup, @, push, 1+, pop, dup, pop,
      !if drop, drop, dup, xor, ; then
    0 # 12 m, m,
    drop, drop, -1 #

@@ -16,9 +16,6 @@ variable which     ( Pointer to dictionary header of the most )
                    ( recently looked up word                  )
 variable compiler  ( Is the compiler on or off?               )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-variable flag      ( Shared variable used by some primitives  )
-                   ( It's used as a flag, a counter, etc.     )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 label: copytag   " RETRO" $,
 label: okmsg     " ok " $,
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -213,7 +210,7 @@ t: t-s" ( R: -a  C: "- )
   t-" keepString literal, ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 variable #value        variable num
-variable #ok           variable negate?
+variable negate?       variable flag
 
 label: nums " 0123456789ABCDEF" $,
 label: base 10 m,

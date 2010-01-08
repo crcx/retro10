@@ -20,7 +20,6 @@ variable flag      ( Shared variable used by some primitives  )
                    ( It's used as a flag, a counter, etc.     )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 label: copytag   " RETRO" $,
-label: nomatch   " Word Not Found" $,
 label: okmsg     " ok " $,
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: dup  ( n-nn )  dup, ;       t: 1+   ( n-n   )  1+, ;
@@ -312,7 +311,7 @@ t: run-on-boot  ( -   )
   boot ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: with-class   ( ac- ) jump: execute
-t: notfound     ( -   ) cr nomatch # type cr ;
+t: notfound     ( -   ) cr TIB # type 32 # emit char: ? # emit cr ;
 t: the->xt      ( a-n ) which # @, d->xt @, ;
 t: the->class   ( a-n ) which # @, d->class @, ;
 t: tib->number? ( -f  ) TIB # isnumber? ;

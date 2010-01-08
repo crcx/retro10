@@ -6,7 +6,6 @@
 3072 constant SCRATCH
 3584 constant TIB
 4096 constant HEAP
-5000000 constant MAX-IMAGE
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 mark-dictionary    ( Pointer to the most recent dictionary    )
 variable last      ( header                                   )
@@ -90,7 +89,7 @@ t: .word   ( a- )
 t: .macro  ( a- )
    jump: execute
 t: .data   ( a- )
-   compiler # @, 0; drop, literal, ;
+   compiler # @, 0; drop, jump: literal,
 
 ' .word  'WORD  set-class
 ' .macro 'MACRO set-class
@@ -104,7 +103,7 @@ t: clear  ( -  ) -1 # emit ;
 t: (type) ( a-a ) repeat @+ 0; emit again ;
 t: type   ( a-  ) update # off (type) drop, update # on redraw ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-variable break-char      ( Holds the delimiter for 'accept'   )
+variable break           ( Holds the delimiter for 'accept'   )
 -1 variable: whitespace  ( Allow extended whitespace          )
 
 t: (remap-keys) ( c-c ) ;
@@ -126,25 +125,22 @@ t: key ( -c )
 
 t: ekey ( -c ) key dup, emit ;
 
-variable accept:tib
-t: >tib ( c- ) accept:tib # @, !+ accept:tib # !, ;
-
-t: eat-leading ( - )
+t: eat-leading ( a-a )
   repeat
     ekey dup,
-    break-char # @, !if >tib ; then drop,
+    break # @, !if swap, !+ ; then drop,
   again ;
 
-t: (accept) ( -c )
+t: (accept) ( a-a )
   repeat
-    ekey dup,
-    break-char # @, =if drop, ; then
-    dup, 8 # =if 1 # accept:tib # -! drop, jump: (accept) then
-    >tib
+    ekey
+    dup, break # @, =if drop, ; then
+    dup, 8 # =if drop, 1-, jump: (accept) then
+    swap, !+
   again ;
 
 t: accept ( c- )
-  break-char # !, TIB # accept:tib # !, eat-leading (accept) 0 # >tib ;
+  break # !, TIB # eat-leading (accept) 0 # swap, !+ drop, ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: d->class ( a-a )  1+, ;
 t: d->xt    ( a-a )  1+, 1+, ;

@@ -284,3 +284,29 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
   : fastRender ( - )
     ['] fast ['] redraw :is later ['] redraw :devector redraw ;
 }}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( A vocab word is a word that can be used to open and shut a  )
+( vocabulary section from the dictionary. It consists of      )
+( three fields which point to three dictionary headers: the   )
+( word before the vocabulary starts, the first word to be     )
+( hidden, and the first word not to be hidden.                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  variable before
+  variable hidden
+  variable shown
+  : v->before 2 + @ ;
+  : v->hidden 1 + @ ;
+  : v->shown  0 + @ ;
+  : after ( a-a ) last repeat @ 2dup @ =if nip ;; then again ;
+  ---reveal---
+  : vocab (  -  ) last @ here create , 0 , dup , before ! ;
+  : (( last @ dup shown ! d->xt @ 2 + before @ swap ! ;
+  : )) last @ dup shown @ d->xt @ 1+ !
+       shown @ ! shown @ last !
+       before @ shown @ after ! ;
+  : shut  ( a- ) dup v->before swap v->shown ! ;
+  : open  ( a- ) dup v->hidden swap v->shown ! ;
+}}

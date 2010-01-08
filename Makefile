@@ -1,7 +1,7 @@
 VM     = ~/retro
 CORE   = --with source/core.retro
 STAGE2 = --with source/stage2.retro
-STAGE3 = --with source/stage3.retro
+STAGE3 = --with source/editor.retro --with source/debug.retro
 FINAL  = --with source/final.retro
 META   = --with source/meta.retro
 STATS  = --opstats build.stats --callstats

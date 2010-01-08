@@ -115,20 +115,20 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-( A simple word to allocate memory in a linear fashion. It's  )
-( useful for arrays and similar things.                       )
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: allot  ( n- )  heap +! ;
-: zallot ( n- )  dup 0 <if allot ;; then repeat 0; 1- 0 , again ;
-
-
-( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( These allow a more readable way to create variables and     )
 ( constants. It also makes constants more efficient.          )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : variable:  ( n"- )  create , ;
 : variable   ( "-  )  0 variable: ;
 : constant   ( n"- )  create last @ d->xt ! ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( A simple word to allocate memory in a linear fashion. It's  )
+( useful for arrays and similar things.                       )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: allot  ( n- )  heap +! ;
+: zallot ( n- )  dup 0 <if allot ;; then repeat 0; 1- 0 , again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -273,3 +273,14 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
               ` push ` push ` swap ` - ; compile-only
 : nexti ( - ) ` next ` pop ` drop ; compile-only
 
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Use this before drawing a large amount of text; it'll delay )
+( all video updates until the caller exits                    )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  : fast ( - ) ;
+---reveal---
+  : fastRender ( - )
+    ['] fast ['] redraw :is later ['] redraw :devector redraw ;
+}}

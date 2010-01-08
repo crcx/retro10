@@ -1,0 +1,56 @@
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Copyright [c] 2009-2010 Charles Childers                    )
+( License: ISC                                                )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Display a list of all named words                           )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: words ( - )
+  fastRender last repeat @ 0; dup d->name type 32 emit again ;
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( see <word>                                                  )
+( Provides a human readable display of the compiled code for  )
+( a word.                                                     )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  variable addr
+
+  : pad       ( -   ) addr @ @ 6 for dup base @ r pow <if 32 emit then next ;
+
+  : .wrap     ( -   ) ." ( " later ."  )" ;
+  : .name     ( a-  ) .wrap d->name type ;
+  : resolve   ( -   ) last @ repeat dup d->xt @ addr @ @ =if .name ;then 0; @ again ;
+
+  : token     ( "-  ) 32 accept tib keepString literal, ;
+  : .op       ( a-  ) dup getLength swap type 6 swap - 0; for 32 emit next ;
+  : .symbol   ( "-  ) token ` .op ` drop ; immediate
+  : .value    (  -  ) addr ++ addr @ @ . pad resolve drop ;
+  : sym:      ( "-  ) ` over ` =if ` .symbol ` ;then ; immediate
+  : sym+:     ( "-  ) ` over ` =if ` .symbol ` .value ` ;then ; immediate
+
+  : .ascii    ( c-  ) dup 32 128 within if 39 emit emit 39 emit else drop then ;
+
+  : decompile ( -   )
+    addr @ @
+     0 sym: nop      1 sym+: lit      2 sym: dup       3 sym: drop
+     4 sym: swap     5 sym: push      6 sym: pop       7 sym+: call
+     8 sym+: jump    9 sym: ;        10 sym+: >jump   11 sym+: <jump
+    12 sym+: !jump  13 sym+: =jump   14 sym: @        15 sym: !
+    16 sym: +       17 sym: -        18 sym: *        19 sym: /mod
+    20 sym: and     21 sym: or       22 sym: xor      23 sym: <<
+    24 sym: >>      25 sym: 0;       26 sym: 1+       27 sym: 1-
+    28 sym: in      29 sym: out      30 sym: wait
+    ." Unknown: " dup . .ascii
+  ;
+
+  : header? addr @ @ 9 =if addr @ 1+ @ 30 >if addr @ . decompile pop pop 2drop then then ;
+  : vector? addr @ @ 0 =if addr @ 1+ @ 0 =if pop pop 2drop then then ;
+  : here?   addr @ @ here >if pop pop 2drop then ;
+  : more? header? vector? here? ;
+---reveal---
+  : see  ( "-  )
+    ' addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
+}}

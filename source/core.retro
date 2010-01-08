@@ -49,11 +49,11 @@ t: /     ( xy-q   )  /mod, nip ;
 t: mod   ( xy-r   )  /mod, drop, ;
 t: neg   ( x-y    )  -1 # *, ;
 t: execute ( a-   )  1-, push, ;
-t: later ( - )  pop, pop, swap, push, push, ;
-t: @+ ( a-ac )  dup, 1+, swap, @, ;
-t: !+ ( ca-a )  dup, 1+, push, !, pop, ;
-t: +! ( na-  )  dup, push, @, +, pop, !, ;
-t: -! ( na-  )  dup, push, @, swap, -, pop, !, ;
+t: later ( -      )  pop, pop, swap, push, push, ;
+t: @+    ( a-ac   )  dup, 1+, swap, @, ;
+t: !+    ( ca-a   )  dup, 1+, push, !, pop, ;
+t: +!    ( na-    )  dup, push, @, +, pop, !, ;
+t: -!    ( na-    )  dup, push, @, swap, -, pop, !, ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 t: t-here   ( -a  )  heap # @, ;
 t: t-,      ( n-  )  t-here !, t-here 1+, heap # !, ;

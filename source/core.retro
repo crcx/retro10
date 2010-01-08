@@ -222,10 +222,12 @@ label: base 10 m,
 t: digits
   repeat dup, push, nums # +, @, over =if num # on then pop, 0; 1-, again ;
 t: (digit)
-  base # @, 10 # =if 10 # digits ; then
-  base # @, 16 # =if 16 # digits ; then
-  base # @,  8 # =if  8 # digits ; then
-  base # @,  2 # =if  2 # digits ; then
+  base # @,
+    dup, 10 # =if digits ; then
+    dup, 16 # =if digits ; then
+    dup,  8 # =if digits ; then
+    dup,  2 # =if digits ; then
+  drop,
 ;
 t: digit?
   num # off (digit) drop, num # @, ;

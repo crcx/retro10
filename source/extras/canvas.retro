@@ -1,3 +1,5 @@
+vocab canvas
+((
 ( Mouse Support )
 : mouse  ( -xy ) 1 7 out wait ;
 : click? ( -f )  2 7 out wait ;
@@ -29,5 +31,6 @@
 : magenta 13 setColor ;
 : yellow 14 setColor ;
 : white 15 setColor ;
-
+))
+canvas shut
 save bye

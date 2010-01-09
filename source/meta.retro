@@ -79,6 +79,7 @@ jump, 0 m,
   : <if  ( -a ) >jump, cond ;
   : >if  ( -a ) <jump, cond ;
   : !if  ( -a ) =jump, cond ;
+  : if   ( -a ) 0 # !if ;
   : then ( a- ) t-here swap ! ;
 }}
 

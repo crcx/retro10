@@ -85,7 +85,7 @@ t: t-again  ( R: -    C: a- )
 t: t-0;     ( n-n || n -  )  25 # t-, ;
 
 t: .word   ( a- )
-   compiler # @, -1 # =if 7 # t-, t-, ; then jump: execute
+   compiler # @, if 7 # t-, t-, ; then jump: execute
 t: .macro  ( a- )
    jump: execute
 t: .data   ( a- )
@@ -261,8 +261,7 @@ variable found
 
 t: (search)
   repeat
-    dup, d->name TIB # compare
-    -1 # =if which # !, found # on ; then
+    dup, d->name TIB # compare if which # !, found # on ; then
     @, 0;
   again
 ;
@@ -272,7 +271,7 @@ t: search
 
 t: t-'    ( "-a )
   32 # accept search
-  found # @, -1 # =if which # @, d->xt @, ; then 0 #
+  found # @, if which # @, d->xt @, ; then 0 #
   found # on ;
 t: t-[']  ( R: -a   C: "- )
   t-' literal, ;
@@ -314,7 +313,7 @@ t: word?   ( - )
   found # @, 0; drop, the->xt the->class with-class ;
 t: number? ( - )
   found # @, not 0; drop,
-  tib->number? -1 # =if tib->number ; then notfound ;
+  tib->number? if tib->number ; then notfound ;
 t: ok      ( - )
   compiler # @, 0 # =if cr okmsg # type then ;
 t: listen  ( - )

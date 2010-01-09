@@ -62,7 +62,6 @@ stub (ia)
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {
   : type    for @+ emit next drop ;
-  : space   32 emit ;
   : rows    8 fori . dup 64 type 64 + cr nexti ;
   : .block  ." Block: " blk @ . ." of " #-blocks @ 1- . ;
   : x       ." +---:---+---:---" ;

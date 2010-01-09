@@ -182,7 +182,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : pow ( bp-n ) over here ! 1- 0; for here @ * next ;
 : r   ( -n   ) ` pop ` dup ` push ; compile-only
-
+: rdrop ( -  ) ` pop ` drop ; compile-only
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Useful for range checking                                   )
@@ -230,8 +230,14 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( does>                                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: .does compiler @ if swap literal, compile pop drop ;then drop ;
+: .does ( a- ) compiler @ if swap literal, compile rdrop ;then drop ;
 : does> 1 , here 0 , ` reclass ` ;; here swap ! here literal, ` .does ; compile-only
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Display a space                                             )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: space ( - ) 32 emit ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -271,7 +277,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : fori ( n- ) ` dup ` push ` for ` pop ` pop ` 2dup
               ` push ` push ` swap ` - ; compile-only
-: nexti ( - ) ` next ` pop ` drop ; compile-only
+: nexti ( - ) ` next ` rdrop ; compile-only
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

@@ -7,7 +7,7 @@
 ( Display a list of all named words                           )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : words ( - )
-  fastRender last repeat @ 0; dup d->name type 32 emit again ;
+  fastRender last repeat @ 0; dup d->name type space again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -18,14 +18,14 @@
 {{
   variable addr
 
-  : pad       ( -   ) addr @ @ 6 for dup base @ r pow <if 32 emit then next ;
+  : pad       ( -   ) addr @ @ 6 for dup base @ r pow <if space then next ;
 
   : .wrap     ( -   ) ." ( " later ."  )" ;
   : .name     ( a-  ) .wrap d->name type ;
   : resolve   ( -   ) last @ repeat dup d->xt @ addr @ @ =if .name ;then 0; @ again ;
 
   : token     ( "-  ) 32 accept tib keepString literal, ;
-  : .op       ( a-  ) dup getLength swap type 6 swap - 0; for 32 emit next ;
+  : .op       ( a-  ) dup getLength swap type 6 swap - 0; for space next ;
   : .symbol   ( "-  ) token ` .op ` drop ; immediate
   : .value    (  -  ) addr ++ addr @ @ . pad resolve drop ;
   : sym:      ( "-  ) ` over ` =if ` .symbol ` ;then ; immediate
@@ -46,9 +46,9 @@
     ." Unknown: " dup . .ascii
   ;
 
-  : header? addr @ @ 9 =if addr @ 1+ @ 30 >if addr @ . decompile pop pop 2drop then then ;
-  : vector? addr @ @ 0 =if addr @ 1+ @ 0 =if pop pop 2drop then then ;
-  : here?   addr @ here >if pop pop 2drop then ;
+  : header? addr @ @ 9 =if addr @ 1+ @ 30 >if addr @ . decompile rdrop rdrop then then ;
+  : vector? addr @ @ 0 =if addr @ 1+ @  0 =if rdrop rdrop then then ;
+  : here?   addr @ here >if rdrop rdrop then ;
   : more? here? header? vector? here? ;
 ---reveal---
   : see  ( "-  )

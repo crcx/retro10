@@ -12,6 +12,16 @@
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Perform a check to see if we have enough free memory to     )
+( actually build a new image.                                 )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: check ( - )
+  #mem @ here - 4096 IMAGE-SIZE +
+  <if cr ." Error: insufficent heap space" bye then ;
+check forget check
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Some useful words that'll be helpful later on               )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : vars  ( n"- ) for variable next ;

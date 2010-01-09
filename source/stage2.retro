@@ -300,7 +300,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
   : v->before 2 + @ ;
   : v->hidden 1 + @ ;
   : v->shown  0 + @ ;
-  : after ( a-a ) last repeat @ 2dup @ =if nip ;; then again ;
+  : after ( a-a ) last repeat @ 2dup @ =if nip ;then again ;
   ---reveal---
   : vocab (  -  ) last @ here create , 0 , dup , before ! ;
   : (( last @ dup shown ! d->xt @ 2 + before @ swap ! ;

@@ -12,7 +12,7 @@
 ( Allows Retro to "forget" a word, and anything defined after )
 ( it.                                                         )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
-: forget ( "- ) ' drop which @ dup heap ! @ last ! ;
+: forget ( "- ) ' 0; drop which @ dup heap ! @ last ! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

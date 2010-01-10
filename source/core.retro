@@ -307,10 +307,10 @@ t: notfound     ( -   ) cr TIB # type 32 # emit char: ? # emit cr ;
 t: the->xt      ( a-n ) which # @, d->xt @, ;
 t: the->class   ( a-n ) which # @, d->class @, ;
 t: tib->number? ( -f  ) TIB # isnumber? ;
-t: tib->number  ( -n  ) TIB # >number .data ;
+t: tib->number  ( -n  ) TIB # >number ' .data # jump: with-class
 
 t: word?   ( - )
-  found # @, 0; drop, the->xt the->class with-class ;
+  found # @, 0; drop, the->xt the->class jump: with-class
 t: number? ( - )
   found # @, not 0; drop,
   tib->number? if tib->number ; then notfound ;

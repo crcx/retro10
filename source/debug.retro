@@ -46,11 +46,15 @@
     ." Unknown: " dup . .ascii
   ;
 
-  : header? addr @ @ 9 =if addr @ 1+ @ 30 >if addr @ . decompile rdrop rdrop then then ;
-  : vector? addr @ @ 0 =if addr @ 1+ @  0 =if rdrop rdrop then then ;
-  : here?   addr @ here >if rdrop rdrop then ;
-  : more? here? header? vector? here? ;
+  stub more?
+  {
+    : header? addr @ @ 9 =if addr @ 1+ @ 30 >if addr @ . decompile rdrop rdrop then then ;
+    : vector? addr @ @ 0 =if addr @ 1+ @  0 =if rdrop rdrop then then ;
+    : here?   addr @ here >if rdrop rdrop then ;
+    here ] here? header? vector? here? ; is more?
+  }
 ---reveal---
-  : see  ( "-  )
-    ' addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
+  : :see  ( a- )
+    0; addr ! cr repeat addr @ . decompile cr addr ++ more? again ;
+  : see   ( "- ) ' :see ;
 }}

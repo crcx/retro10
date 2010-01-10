@@ -14,12 +14,17 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : forget ( "- ) ' 0; drop which @ dup heap ! @ last ! ;
 
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Get a dictionary pointer for a word                         )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+: d'      ( "-a  ) ' drop which @ ;
+
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Allow changing the class of a word                          )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : reclass  ( a-  ) last @ d->class ! ;
-: reclass: ( a"- ) ' drop which @ d->class ! ;
+: reclass: ( a"- ) d' d->class ! ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -306,6 +311,20 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( >last and expose -- move a dictionary header to the top of  )
+( the dictionary.                                             )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  : after   ( a-a  ) last repeat @ 2dup @ =if nip ;then again ;
+  : remove  ( a-   ) dup @ swap after ! ;
+  : replace ( a-   ) last @ over ! last ! ;
+  ---reveal---
+  : >last   ( a-   ) dup remove replace ;
+  : expose  ( "-   ) d' >last ;
+}}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( A vocab word is a word that can be used to open and shut a  )
 ( vocabulary section from the dictionary. It consists of      )
 ( three fields which point to three dictionary headers: the   )
@@ -330,6 +349,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
   : open?   ( a-af   ) dup 1+ @ :find nip ;
   : toggle  ( a-     ) open? if shut ;then open ;
   ---reveal---
+  expose open expose shut
   : .vocab  ( a- a"- ) compiler @ if literal, then ` toggle ;
   : vocab ( "- ) create 3 allot ['] .vocab reclass ;
   : (( tod shown ! nod before ! 0 hidden ! fields ;

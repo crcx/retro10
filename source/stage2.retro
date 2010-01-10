@@ -167,6 +167,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 : ahead (  -a ) 8 , here 0 , ; compile-only
 : if    ( f-  ) FALSE literal, ` !if ; compile-only
+: if;   ( f-  ) ` not ` 0; ` drop ; compile-only
 : ;then ( a-  ) ` ;; ` then ; compile-only
 : else  ( a-a ) ` ahead swap ` then ; compile-only
 
@@ -293,6 +294,18 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+( Elements are equivalent to variables, but are contiguous.   )
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+{{
+  : list     (  n-a ) here swap allot ;
+  : setxt    (  a-  ) last @ d->xt ! ;
+  : element  (  a-a ) create dup setxt 1+ ;
+  ---reveal---
+  : elements ( n"-  ) dup list swap for element next drop ;
+}}
+
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( A vocab word is a word that can be used to open and shut a  )
 ( vocabulary section from the dictionary. It consists of      )
 ( three fields which point to three dictionary headers: the   )
@@ -300,19 +313,25 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( hidden, and the first word not to be hidden.                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
-  variable before
-  variable hidden
-  variable shown
-  : v->before 2 + @ ;
-  : v->hidden 1 + @ ;
-  : v->shown  0 + @ ;
-  : after ( a-a ) last repeat @ 2dup @ =if nip ;then again ;
+  3 elements shown hidden before
+  : tod     (  -a ) last @ ;
+  : nod     (  -a ) tod @ ;
+  : current (  -a ) shown @ ;
+  : .shown  (  -a ) current d->xt @ ;
+  : .hidden (  -a ) .shown 1+ ;
+  : .before (  -a ) .shown 1+ 1+ ;
+  : after   ( a-a ) last repeat @ 2dup @ =if nip ;then again ;
+  : remove  (  a- ) current dup @ swap after ! ;
+  : replace (  a- ) current tod over ! last ! ;
+  : fields  (   - ) shown .shown 3 copy ;
+  : open    ( a- ) @ shown ! .hidden @ .shown @ ! ;
+  : shut    ( a- ) @ shown ! .before @ .shown @ ! ;
+  : :find   ( a-af   ) last repeat @ 2dup =if drop @ TRUE ;then dup 0; drop again ;
+  : open?   ( a-af   ) dup 1+ @ :find nip ;
+  : toggle  ( a-     ) open? if shut ;then open ;
   ---reveal---
-  : vocab (  -  ) last @ here create , 0 , dup , before ! ;
-  : (( last @ dup shown ! d->xt @ 2 + before @ swap ! ;
-  : )) last @ dup shown @ d->xt @ 1+ !
-       shown @ ! shown @ last !
-       before @ shown @ after ! ;
-  : shut  ( a- ) dup v->before swap v->shown ! ;
-  : open  ( a- ) dup v->hidden swap v->shown ! ;
+  : .vocab  ( a- a"- ) compiler @ if literal, then ` toggle ;
+  : vocab ( "- ) create 3 allot ['] .vocab reclass ;
+  : (( tod shown ! nod before ! 0 hidden ! fields ;
+  : )) tod hidden ! fields remove replace ;
 }}

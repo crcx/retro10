@@ -33,12 +33,10 @@
 ( The memory layout and basic configuration.                  )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 vocab editor ((
-variable #-blocks
-variable offset
 
-10 variable: line-ending
+4 elements #-blocks offset line-ending blk
+10 line-ending !
 
-variable blk
 : block     512 * offset @ + ;
 : (block)   blk @ block ;
 : (line)    64 * (block) + ;
@@ -91,5 +89,4 @@ stub (ia)
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 64 set-blocks
 ))
-editor shut
-
+editor

@@ -4,20 +4,22 @@
 ( License: ISC                                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
-vocab meta
-((
+
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Configuration                                               )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 4096 constant IMAGE-SIZE
+
+: ok. cr depth . ." ok " ; ' ok. is ok
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Perform a check to see if we have enough free memory to     )
 ( actually build a new image.                                 )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : check ( - )
-  #mem @ here - IMAGE-SIZE
+  #mem @ here - 4096 IMAGE-SIZE +
   <if cr ." Error: insufficent heap space" bye then ;
+check forget check
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -44,10 +46,8 @@ vocab meta
 27 vm: 1-,          28 vm: in,          29 vm: out,
 30 vm: wait,        98 vm: halt,
 
-: createTarget ( - )
-  check
-  here dup target ! origin ! IMAGE-SIZE allot
-  jump, 0 m, ;
+here IMAGE-SIZE allot target ! target @ origin !
+jump, 0 m,
 
 : t-here ( -n ) target @ origin @ - ;
 : main:  ( -  ) t-here cr ." MAIN @ " dup . origin @ 1+ ! ;
@@ -108,7 +108,7 @@ vocab meta
   : @+ ( a-ac )  dup 1+ swap @ ;
   : !+ ( ca-a )  dup 1+ push ! pop ;
   : copy ( aan- ) for push @+ pop !+ next drop drop ;
-  : save ( - )    1 4 out 0 0 out wait [ 99 ,
+  : save ( - )    1 4 [ 29 , ] 0 0 [ 29 , 30 , 99 , ] ;
 ---reveal---
   : boot-new
     origin @ 0 IMAGE-SIZE copy [ 8 , 0 , ] ;
@@ -117,6 +117,3 @@ vocab meta
 }}
 
 : ; ;, ;; [
-))
-
-' meta shut

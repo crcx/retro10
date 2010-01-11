@@ -6,10 +6,6 @@
 3072 constant SCRATCH
 3584 constant TIB
 4096 constant HEAP
-
-' meta open
-createTarget
-
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 mark-dictionary    ( Pointer to the most recent dictionary    )
 variable last      ( header                                   )

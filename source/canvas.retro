@@ -32,5 +32,5 @@ vocab canvas
 : yellow 14 setColor ;
 : white 15 setColor ;
 ))
-canvas
+' canvas shut
 save bye

@@ -11,16 +11,13 @@ vocab meta
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 4096 constant IMAGE-SIZE
 
-: ok. cr depth . ." ok " ; ' ok. is ok
-
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Perform a check to see if we have enough free memory to     )
 ( actually build a new image.                                 )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 : check ( - )
-  #mem @ here - 4096 IMAGE-SIZE +
+  #mem @ here - IMAGE-SIZE
   <if cr ." Error: insufficent heap space" bye then ;
-check forget check
 
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -48,6 +45,7 @@ check forget check
 30 vm: wait,        98 vm: halt,
 
 : createTarget ( - )
+  check
   here dup target ! origin ! IMAGE-SIZE allot
   jump, 0 m, ;
 
@@ -120,3 +118,5 @@ check forget check
 
 : ; ;, ;; [
 ))
+
+' meta shut

@@ -7,6 +7,7 @@
 3584 constant TIB
 4096 constant HEAP
 
+' meta open
 createTarget
 
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )

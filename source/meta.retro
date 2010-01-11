@@ -105,10 +105,10 @@ jump, 0 m,
 ( instead of "boot-new"                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
-  : @+ ( a-ac )  dup 1+ swap @ ;
-  : !+ ( ca-a )  dup 1+ push ! pop ;
+  : @+ ( a-ac )   dup 1+ swap @ ;
+  : !+ ( ca-a )   dup 1+ push ! pop ;
   : copy ( aan- ) for push @+ pop !+ next drop drop ;
-  : save ( - )    1 4 [ 29 , ] 0 0 [ 29 , 30 , 99 , ] ;
+  : save ( - )    1 4 out 0 0 out wait [ 99 ,
 ---reveal---
   : boot-new
     origin @ 0 IMAGE-SIZE copy [ 8 , 0 , ] ;

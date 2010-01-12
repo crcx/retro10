@@ -5,6 +5,8 @@
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
 
+vocab meta
+((
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 ( Configuration                                               )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
@@ -45,9 +47,6 @@ check forget check
 24 vm: >>,          25 vm: 0;           26 vm: 1+,
 27 vm: 1-,          28 vm: in,          29 vm: out,
 30 vm: wait,        98 vm: halt,
-
-here IMAGE-SIZE allot target ! target @ origin !
-jump, 0 m,
 
 : t-here ( -n ) target @ origin @ - ;
 : main:  ( -  ) t-here cr ." MAIN @ " dup . origin @ 1+ ! ;
@@ -105,15 +104,20 @@ jump, 0 m,
 ( instead of "boot-new"                                       )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
-  : @+ ( a-ac )   dup 1+ swap @ ;
-  : !+ ( ca-a )   dup 1+ push ! pop ;
-  : copy ( aan- ) for push @+ pop !+ next drop drop ;
-  : save ( - )    1 4 out 0 0 out wait [ 99 ,
+  : @+       ( a-ac )  dup 1+ swap @ ;
+  : !+       ( ca-a )  dup 1+ push ! pop ;
+  : copy     ( aan- )  for push @+ pop !+ next drop drop ;
+  : save     ( - )     1 4 out 0 0 out wait [ 99 ,
+  : relocate ( - )     origin @ 0 IMAGE-SIZE copy ;
 ---reveal---
-  : boot-new
-    origin @ 0 IMAGE-SIZE copy [ 8 , 0 , ] ;
-  : store-and-quit
-    origin @ 0 IMAGE-SIZE copy save ;
+  : boot-new       ( - ) relocate [ 8 , 0 , ] ;
+  : save-and-quit ( - ) relocate save ;
 }}
 
 : ; ;, ;; [
+
+here IMAGE-SIZE allot target ! target @ origin !
+jump, 0 m,
+
+))
+' meta shut

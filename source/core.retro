@@ -3,6 +3,9 @@
 ( Copyright [c] 2009, Charles Childers                        )
 ( License: ISC                                                )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
+
+' meta open
+
 3072 constant SCRATCH
 3584 constant TIB
 4096 constant HEAP

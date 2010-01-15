@@ -302,7 +302,7 @@ here ] last repeat @ dup @ <list> 1+ @ =if ;; then again ;
 ( Elements are equivalent to variables, but are contiguous.   )
 ( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 {{
-  : list     (  n-a ) here swap allot ;
+  : list     (  n-a ) here swap zallot ;
   : setxt    (  a-  ) last @ d->xt ! ;
   : element  (  a-a ) create dup setxt 1+ ;
   ---reveal---

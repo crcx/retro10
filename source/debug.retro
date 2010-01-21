@@ -48,10 +48,12 @@
 
   stub more?
   {
-    : header? addr @ @ 9 =if addr @ 1+ @ 30 >if addr @ . decompile rdrop rdrop then then ;
-    : vector? addr @ @ 0 =if addr @ 1+ @  0 =if rdrop rdrop then then ;
+    : header?
+      addr @ @ 9 = 0; drop
+      addr @ 1+ @ 30 >if addr @ . decompile rdrop rdrop then ;
+    : vector? addr @ @ addr @ 1+ @ +  0 =if rdrop rdrop then ;
     : here?   addr @ here >if rdrop rdrop then ;
-    here ] here? header? vector? here? ; is more?
+    here ] here? header? vector? ; is more?
   }
 ---reveal---
   : :see  ( a- )

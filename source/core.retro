@@ -198,9 +198,7 @@ t: tempString ( a-a  )
 
 t: keepString  ( a-a )
   dup, getLength 1+, 1+, 1+, t-here +,
-  8 # t-, t-,
-  t-here swap,
-  $ 0 # t-,
+  8 # t-, t-, t-here swap, $
 ;
 
 t: t-"  ( "-a )
